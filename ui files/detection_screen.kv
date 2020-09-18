@@ -66,11 +66,19 @@
                         text: 'DNN'
                         size_hint_x:None
                         color: normal_text_color
-                Label:
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                    RoundButton:
+                        text: 'Detect'
+                        size_hint_y: .6
+                        on_release: root.haar_detect()
+                    Label:
                 Label:
             DropButton:
                 #text:'Drop image here'
                 Image:
+                    id: face_image
                     source: './Images/image.png'
                     x: self.parent.x
                     y: self.parent.y
