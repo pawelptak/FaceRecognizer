@@ -35,7 +35,7 @@
                 BoxLayout:
                     orientation: 'horizontal'
                     CustomCheckbox:
-                        id: haar
+                        id: haar_checkbox
                         size_hint_x:None
                         width: 40
                         group: 'alg_check'
@@ -47,7 +47,7 @@
                 BoxLayout:
                     orientation: 'horizontal'
                     CustomCheckbox:
-                        id: hog
+                        id: hog_checkbox
                         size_hint_x:None
                         width: 40
                         group: 'alg_check'
@@ -58,7 +58,7 @@
                 BoxLayout:
                     orientation: 'horizontal'
                     CustomCheckbox:
-                        id: dnn
+                        id: dnn_checkbox
                         size_hint_x:None
                         width: 40
                         group: 'alg_check'
@@ -72,11 +72,18 @@
                     RoundButton:
                         text: 'Detect'
                         size_hint_y: .6
-                        on_release: root.haar_detect()
+                        on_release: root.detect()
                     Label:
                 Label:
+                    id: result
+                    text: 'Nothing'
+                    color: normal_text_color
+                    opacity: 0
+
+
             DropButton:
                 #text:'Drop image here'
+                on_release: root.open_file_dialog()
                 Image:
                     id: face_image
                     source: './Images/image.png'
