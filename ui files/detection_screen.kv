@@ -1,0 +1,78 @@
+#Copyright (C) 2020 BardzoFajnyZespol
+
+#: import ew kivy.uix.effectwidget
+
+<DetectionScreen>:
+    name: "detection"
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        canvas.before:
+            Color:
+                rgb: bck_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            orientation: 'horizontal'
+            #padding:20
+
+            canvas.before:
+                Color:
+                    rgb: bck_color #change for testing
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            BoxLayout:
+                orientation:'vertical'
+                Label:
+                    text: "Detection algorithm"
+                    halign:"left"
+                    text_size: self.size
+                    color: normal_text_color
+                BoxLayout:
+                    orientation: 'horizontal'
+                    CustomCheckbox:
+                        id: haar
+                        size_hint_x:None
+                        width: 40
+                        group: 'alg_check'
+                    Label:
+                        text: 'HAAR'
+                        size_hint_x:None
+                        color: normal_text_color
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    CustomCheckbox:
+                        id: hog
+                        size_hint_x:None
+                        width: 40
+                        group: 'alg_check'
+                    Label:
+                        text: 'HOG'
+                        size_hint_x:None
+                        color: normal_text_color
+                BoxLayout:
+                    orientation: 'horizontal'
+                    CustomCheckbox:
+                        id: dnn
+                        size_hint_x:None
+                        width: 40
+                        group: 'alg_check'
+                    Label:
+                        text: 'DNN'
+                        size_hint_x:None
+                        color: normal_text_color
+                Label:
+                Label:
+            DropButton:
+                #text:'Drop image here'
+                Image:
+                    source: './Images/image.png'
+                    x: self.parent.x
+                    y: self.parent.y
+                    size: self.parent.size
+                    opacity: .3 if self.source == './Images/image.png' else 1

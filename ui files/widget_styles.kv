@@ -1,0 +1,68 @@
+#Copyright (C) 2020 BardzoFajnyZespol
+
+#defining colors and fonts:
+#:set workspace_bck_color (1,1,1)
+#:set bck_color (231/255,231/255,233/255)
+#:set normal_text_color (0.2,0.2,0.2,1)
+#:set header_text_color (0/255,102/255,178/255,1)
+#:set ok_text_color (82/255,184/255,111/255,1)
+#:set area_color (82/255,184/255,111/255,.5)
+#:set nok_text_color (210/255,48/255,64/255,1)
+#:set font_light './Fonts/Bosch Sans Light'
+#:set font_regular './Fonts/Bosch Sans Regular'
+#:set font_bold './Fonts/Bosch Sans Bold'
+
+#top naviation bar style
+<TabBar@GridLayout>:
+    size: root.width, self.height
+    size_hint_y:None
+    height: 55
+    cols:1
+
+#custom button style
+<CustButton@Button>
+    font_name: font_light
+    color: normal_text_color
+    background_normal:''
+    background_down: './Images/pressed.jpg'
+
+<RoundButton@Button>
+    background_color:0,0,0,0
+    font_name: font_light
+    color: normal_text_color
+    disabled_color: normal_text_color
+    canvas.before:
+        Color:
+            rgb:(.94,.94,.94,1) if self.state == 'normal' else (.9, .9, .9, 1)
+        RoundedRectangle:
+            size: (self.size)
+            pos: (self.pos)
+            radius: [10, ]
+
+#custom text input
+<CustomInput@TextInput>:
+    write_tab: False
+    font_name: font_light
+    background_normal:'Images/light_grey.jpg'
+    background_disabled_normal:'Images/pressed.jpg'
+    text_size: self.size
+    valign:'bottom'
+
+    canvas.before:
+        Color:
+            rgb: normal_text_color if self.text != '' and self.disabled == False else (.6,.6,.6,1)
+        Line:
+            width: 1
+            rectangle: (self.x, self.y, self.width, self.height-2)
+
+<MySpinnerOption@SpinnerOption>: #spinner is a drop down list for choosing models
+    background_normal:'./Images/pressed.jpg'
+    background_down: './Images/list_pressed.jpg'
+    color: normal_text_color
+    font_name: font_light
+
+<CustomCheckbox@CheckBox>:
+    background_checkbox_normal: './Images/checkbox_off.png'
+    background_checkbox_down: './Images/checkbox_on.png'
+    background_radio_normal: './Images/radio_off.png'
+    background_radio_down: './Images/radio_on.png'
