@@ -26,16 +26,15 @@
             #Auto mode button
             CustButton:
                 id:auto_mode_button
-                text:"Detection"
-                color: (0,0,0,1) if root.manager.current=="detection" else normal_text_color
-                font_name: font_regular if root.manager.current=="auto" else font_light
+                text:"HAAR"
+                bold: True if root.manager.current=="haar" else False
                 background_down: './Images/pressed.jpg'
                 on_release:
-                    root.manager.current = "detection"
+                    root.manager.current = "haar"
                     root.manager.transition.direction = "right"
                     root.manager.stack.add_screen(root.manager.current)
                 Label:
-                    opacity:1 if root.manager.current=="detection" else 0
+                    opacity:1 if root.manager.current=="haar" else 0
                     canvas:
                         Color:
                             rgba: header_text_color
@@ -47,15 +46,14 @@
             #Learning mode button
             CustButton:
                 id:learning_mode_button
-                text:"Placeholder"
-                #color: (0,0,0,1) if root.manager.current=="learning" else normal_text_color
-                font_name: font_regular if root.manager.current=="learning" else font_light
+                text:"HOG"
+                bold: True if root.manager.current=="hog" else False
                 on_release:
                     root.manager.transition.direction = "left" if root.manager.current == "auto" else "right"
                     #root.manager.current = "learning"
                     root.manager.stack.add_screen(root.manager.current)
                 Label:
-                    opacity:1 if root.manager.current=="learning" else 0
+                    opacity:1 if root.manager.current=="hog" else 0
                     canvas:
                         Color:
                             rgba: header_text_color
@@ -67,16 +65,15 @@
             #Manual mode button
             CustButton:
                 id:manual_mode_button
-                text:"Placeholder"
-                #color: (0,0,0,1) if root.manager.current=="manual" else normal_text_color
-                font_name: font_regular if root.manager.current=="manual" else font_light
+                text:"DNN"
+                bold: True if root.manager.current=="dnn" else False
                 on_release:
                     root.manager.transition.direction = "left" if root.manager.current == "auto" or root.manager.current == "learning" else "right"
                     #root.manager.current = "manual"
                     root.manager.stack.add_screen(root.manager.current)
 
                 Label:
-                    opacity:1 if root.manager.current=="manual" else 0
+                    opacity:1 if root.manager.current=="dnn" else 0
                     canvas:
                         Color:
                             rgba: header_text_color
@@ -122,6 +119,6 @@
         id: manager
 
         #screen classes:
-        DetectionScreen:
+        HAARScreen:
 
 

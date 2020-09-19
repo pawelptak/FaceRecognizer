@@ -24,3 +24,4 @@ class DropButton(RoundButton):
             self.path = path
             print(self.path)
             self.children[0].source = str(self.path)
+            self.children[0].load_image(str(self.path))

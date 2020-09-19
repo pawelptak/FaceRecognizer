@@ -6,9 +6,6 @@
 #:set ok_text_color (82/255,184/255,111/255,1)
 #:set area_color (82/255,184/255,111/255,.5)
 #:set nok_text_color (210/255,48/255,64/255,1)
-#:set font_light './Fonts/Bosch Sans Light'
-#:set font_regular './Fonts/Bosch Sans Regular'
-#:set font_bold './Fonts/Bosch Sans Bold'
 
 #top naviation bar style
 <TabBar@GridLayout>:
@@ -19,14 +16,12 @@
 
 #custom button style
 <CustButton@Button>
-    font_name: font_light
     color: normal_text_color
     background_normal:''
     background_down: './Images/pressed.jpg'
 
 <RoundButton@Button>
     background_color:0,0,0,0
-    font_name: font_light
     color: normal_text_color
     disabled_color: normal_text_color
     canvas.before:
@@ -40,7 +35,6 @@
 #custom text input
 <CustomInput@TextInput>:
     write_tab: False
-    font_name: font_light
     background_normal:'Images/light_grey.jpg'
     background_disabled_normal:'Images/pressed.jpg'
     text_size: self.size
