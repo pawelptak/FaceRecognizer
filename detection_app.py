@@ -1,5 +1,3 @@
-#Copyright (C) 2020 BardzoFajnyZespol
-
 import threading
 
 from kivy.app import App
@@ -12,6 +10,7 @@ from kivy.core.window import Window
 from classes.detection_screen import DetectionScreen
 from classes.drop_button import DropButton
 from classes.screen_stack import ScreenStack
+from functions.empty_dir import *
 
 #loading ui files
 Builder.load_file("ui files/widget_styles.kv")
@@ -45,3 +44,4 @@ class FaceDetector(App):
 
 if __name__ == '__main__':
     FaceDetector().run()
+    del_all_files('./detections')
