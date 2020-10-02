@@ -2,7 +2,6 @@ from kivy.uix.screenmanager import Screen
 from functions.haar_cascade import *
 import tkinter as tk
 from tkinter import filedialog
-from functions.empty_dir import *
 
 class HAARScreen(Screen):
     def __init__(self, **kw):

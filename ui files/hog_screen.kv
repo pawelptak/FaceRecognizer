@@ -1,0 +1,74 @@
+#: import ew kivy.uix.effectwidget
+
+<HOGScreen>:
+    name: "hog"
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        canvas.before:
+            Color:
+                rgb: bck_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            orientation: 'horizontal'
+            #padding:20
+
+            canvas.before:
+                Color:
+                    rgb: bck_color #change for testing
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            BoxLayout:
+                orientation:'vertical'
+
+                AnchorLayout:
+                    anchor_y: 'top'
+                    size_hint_y: None
+                    Label:
+                        text: 'HOG face detection'
+                        color: normal_text_color
+                        bold: True
+                        font_size: '20sp'
+
+
+                BoxLayout:
+                    id: setting_box
+                    orientation: 'vertical'
+                    size_hint_y: None
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                    RoundButton:
+                        text: 'Detect'
+                        size_hint_y: .4
+                        on_release: root.detect()
+                    Label:
+                Label:
+                    id: result
+                    text: 'Nothing'
+                    color: normal_text_color
+                    opacity: 0
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                DropButton:
+                    #text:'Drop image here'
+                    on_release: root.open_file_dialog()
+                    FaceImage:
+                        id: face_image
+                        source: './Images/image.png'
+                        x: self.parent.x
+                        y: self.parent.y
+                        size: self.parent.size
+                        opacity: .3 if self.source == './Images/image.png' else 1
+                Label:
+                    size_hint_y: .1
+
+

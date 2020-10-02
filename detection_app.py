@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 #importing classes. do not remove
 from classes.haar_screen import HAARScreen
+from classes.hog_screen import HOGScreen
 from classes.drop_button import DropButton
 from classes.face_image import FaceImage
 from classes.screen_stack import ScreenStack
@@ -17,6 +18,7 @@ from functions.empty_dir import *
 Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
 Builder.load_file("ui files/haar_screen.kv")
+Builder.load_file("ui files/hog_screen.kv")
 
 
 
@@ -44,5 +46,9 @@ class FaceDetector(App):
         return Main()
 
 if __name__ == '__main__':
-    FaceDetector().run()
+    
+    if not os.path.exists('./detections'):
+        os.makedirs('./detections')
     del_all_files('./detections')
+
+    FaceDetector().run()

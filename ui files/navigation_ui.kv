@@ -50,7 +50,7 @@
                 bold: True if root.manager.current=="hog" else False
                 on_release:
                     root.manager.transition.direction = "left" if root.manager.current == "auto" else "right"
-                    #root.manager.current = "learning"
+                    root.manager.current = "hog"
                     root.manager.stack.add_screen(root.manager.current)
                 Label:
                     opacity:1 if root.manager.current=="hog" else 0
@@ -120,5 +120,6 @@
 
         #screen classes:
         HAARScreen:
+        HOGScreen:
 
 
