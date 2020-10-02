@@ -1,9 +1,12 @@
 from kivy.uix.screenmanager import Screen
 from functions.haar_cascade import *
+from functions.configuration import *
 import tkinter as tk
 from tkinter import filedialog
 
 class HAARScreen(Screen):
+    image_source = ''
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -37,7 +40,7 @@ class HAARScreen(Screen):
 
         self.get_root_window().raise_window()  # set focus on window
         if file_name != '':
-            self.ids.face_image.source = file_name
+            #self.ids.face_image.source = file_name
             self.ids.face_image.load_image(file_name)
 
     def enable_hog(self, value):
@@ -58,3 +61,14 @@ class HAARScreen(Screen):
         else:
             self.ids.setting_box.opacity = 0
             self.ids.setting_box.disabled = True
+
+    def load_image_source(self):
+        img_source = load_config()
+        return img_source
+
+    def on_pre_enter(self, *args):
+        src = load_config()
+        if src:
+            self.ids.face_image.load_image(src)
+            self.ids.result.opacity = 0
+

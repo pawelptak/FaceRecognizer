@@ -1,5 +1,8 @@
-import threading
 
+
+
+import threading
+from functions.configuration import *
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
@@ -14,13 +17,10 @@ from classes.face_image import FaceImage
 from classes.screen_stack import ScreenStack
 from functions.empty_dir import *
 
-#loading ui files
 Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
 Builder.load_file("ui files/haar_screen.kv")
 Builder.load_file("ui files/hog_screen.kv")
-
-
 
 #Main Screen with navigation bar on top
 class Main(GridLayout, threading.Thread):
@@ -37,6 +37,8 @@ class WindowManager(ScreenManager):
 
 #main app class
 class FaceDetector(App):
+    # loading ui files
+
     icon = 'Images/icon.png'
 
     Window.minimum_width, Window.minimum_height = (800,600)
@@ -46,9 +48,10 @@ class FaceDetector(App):
         return Main()
 
 if __name__ == '__main__':
-    
+
     if not os.path.exists('./detections'):
         os.makedirs('./detections')
     del_all_files('./detections')
+    clear_image_src()
 
     FaceDetector().run()

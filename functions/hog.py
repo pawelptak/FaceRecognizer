@@ -1,7 +1,9 @@
 import os
 import dlib
 import cv2
+from functions.function_time import *
 
+@timing
 def face_detect_hog(img_path: str):
     try:
         img_name = os.path.basename(img_path)

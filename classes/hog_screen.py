@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from functions.hog import *
 import tkinter as tk
 from tkinter import filedialog
+from functions.configuration import *
 
 class HOGScreen(Screen):
     def __init__(self, **kw):
@@ -38,7 +39,12 @@ class HOGScreen(Screen):
 
         self.get_root_window().raise_window()  # set focus on window
         if file_name != '':
-            self.ids.face_image.source = file_name
+            #self.ids.face_image.source = file_name
             self.ids.face_image.load_image(file_name)
 
+    def on_pre_enter(self, *args):
+        src = load_config()
+        if src:
+            self.ids.face_image.load_image(src)
+            self.ids.result.opacity = 0
 

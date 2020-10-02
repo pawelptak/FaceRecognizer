@@ -1,5 +1,5 @@
 from kivy.uix.image import Image
-
+from functions.configuration import *
 
 class FaceImage(Image):
     image_loaded = False
@@ -11,3 +11,5 @@ class FaceImage(Image):
     def load_image(self, img_src: str):
         self.image_loaded = True
         self.original_source = img_src
+        save_image_src(img_src) #save original image source to file
+        self.source = img_src
