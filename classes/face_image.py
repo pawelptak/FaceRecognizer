@@ -13,3 +13,9 @@ class FaceImage(Image):
         self.original_source = img_src
         save_image_src(img_src) #save original image source to file
         self.source = img_src
+        self.reload()
+
+    def reset_image(self):
+        self.image_loaded = False
+        self.original_source = None
+        self.source = './Images/image.png'

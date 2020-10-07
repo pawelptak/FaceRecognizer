@@ -15,10 +15,10 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
         height = int(img.shape[0] * scale_percent / 100)
         dsize = (width, height)
         #img = cv2.resize(img, dsize)
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #converts to greyscale
+        grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #converts to greyscale
         #img = cv2.equalizeHist(img)
         faces = face_cascade.detectMultiScale(
-            img,
+            grey_img,
             scaleFactor=scale_factor,  # specifying how much the image size is reduced at each image scale (default 1.5). Has to be larger than 1
             minNeighbors=min_neighbors,  # specifying how many neighbors each candidate rectangle should have to retain it (default 5)
             minSize=min_size) #(default 10,10)

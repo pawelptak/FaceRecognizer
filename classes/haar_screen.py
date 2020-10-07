@@ -34,13 +34,20 @@ class HAARScreen(Screen):
             self.ids.result.text = 'No faces detected'
 
     def open_file_dialog(self):
-        root = tk.Tk()
-        root.withdraw()
-        file_name = filedialog.askopenfilename(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
+        file_name = ''
+        if self.ids.cam_box.play != True:
+            root = tk.Tk()
+            root.withdraw()
+            file_name = filedialog.askopenfilename(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
 
-        self.get_root_window().raise_window()  # set focus on window
+            self.get_root_window().raise_window()  # set focus on window
+        else:
+            file_name = './detections/selfie.png'
+            self.ids.cam_box.export_to_png('./detections/selfie.png')
+            self.ids.camera_switch.trigger_action(duration=0.1)
+
         if file_name != '':
-            #self.ids.face_image.source = file_name
+            # self.ids.face_image.source = file_name
             self.ids.face_image.load_image(file_name)
 
     def enable_hog(self, value):
@@ -72,3 +79,14 @@ class HAARScreen(Screen):
             self.ids.face_image.load_image(src)
             self.ids.result.opacity = 0
 
+    def use_webcam(self):
+        self.ids.image_boxlayout.remove_widget(self.ids.face_image)
+        if self.ids.camera_switch.text == 'OFF':
+            self.ids.cam_box.play = True
+            self.ids.face_image.reset_image()
+            self.ids.cam_box.opacity = 1
+            self.ids.detect_button.disabled = True
+        else:
+            self.ids.cam_box.play = False
+            self.ids.cam_box.opacity = 0
+            self.ids.detect_button.disabled = False

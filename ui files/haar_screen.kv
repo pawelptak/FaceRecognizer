@@ -95,6 +95,7 @@
                     orientation: 'horizontal'
                     Label:
                     RoundButton:
+                        id: detect_button
                         text: 'Detect'
                         size_hint_y: .4
                         on_release: root.detect()
@@ -106,9 +107,24 @@
                     opacity: 0
 
             BoxLayout:
+                id: image_boxlayout
                 orientation: 'vertical'
-
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y:None
+                    height:30
+                    Label:
+                    CustomSwitch:
+                        id: camera_switch
+                        size_hint_x:None
+                        width:40
+                        on_release: root.use_webcam()
+                    Label:
+                Label:
+                    size_hint_y:None
+                    height:10
                 DropButton:
+                    id: image_button
                     #text:'Drop image here'
                     on_release: root.open_file_dialog()
                     FaceImage:
@@ -118,7 +134,13 @@
                         y: self.parent.y
                         size: self.parent.size
                         opacity: .3 if self.source == './Images/image.png' else 1
-                Label:
-                    size_hint_y: .1
+                    Camera:
+                        id:cam_box
+                        opacity: 0
+                        x: self.parent.x
+                        y: self.parent.y
+                        size: self.parent.size
+                        resolution: (640, 480)
+                        play: False
 
 

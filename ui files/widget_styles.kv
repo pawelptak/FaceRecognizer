@@ -58,3 +58,16 @@
     background_checkbox_down: './Images/checkbox_on.png'
     background_radio_normal: './Images/radio_off.png'
     background_radio_down: './Images/radio_on.png'
+
+#custom switch
+<CustomSwitch@Button>
+    background_color:0,0,0,0
+    color: normal_text_color
+    disabled_color: normal_text_color
+    canvas.before:
+        Color:
+            rgb:(.94,.94,.94,1) if self.text == 'OFF' else (.8, .8, .8, 1)
+        RoundedRectangle:
+            size: (self.size)
+            pos: (self.pos)
+            radius: [10, ]
