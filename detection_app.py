@@ -55,3 +55,4 @@ if __name__ == '__main__':
     clear_image_src()
 
     FaceDetector().run()
+    del_all_files('./detections')
