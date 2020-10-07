@@ -44,19 +44,20 @@ class HAARScreen(Screen):
             cv2_image = cv2.imread(img)
             save_path = './detections/' + img_name
             cv2.imwrite(save_path, cv2_image) #saving image without detections
-
+            face_num = 1
             for (x, y, w, h) in detection:
                 cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                crop_image(img, x, y, w, h)
+                cropped = crop_image(img, x, y, w, h)
+                save_path = './detections/face_'+str(face_num)+'_' + img_name
+                face_num += 1
+                cv2.imwrite(save_path, cropped)  # saving detected faces as images
             save_path = './detections/det_' + img_name
             cv2.imwrite(save_path, cv2_image) #saving image with detections
 
 
             self.ids.face_image.source = save_path
             self.ids.face_image.reload()
-            self.ids.result.text = 'Faces detected: '+ str(len(detection))
-
-
+            self.ids.result.text = 'Faces detected: ' + str(len(detection))
         else:
             self.ids.result.text = 'No faces detected'
 
