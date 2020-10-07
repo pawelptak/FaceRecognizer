@@ -6,19 +6,14 @@ from functions.function_time import *
 @timing
 def face_detect_hog(img_path: str):
     try:
-        img_name = os.path.basename(img_path)
         img = cv2.imread(img_path)
+        grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # converts to greyscale
         face_detect = dlib.get_frontal_face_detector()
-        faces = face_detect(img, 1)
-
-        save_path = None
-
+        faces = face_detect(grey_img, 1)
+        faces_ = []
         if len(faces):
             for d in faces:
-                img = cv2.rectangle(img, (d.left(), d.top()), (d.right(), d.bottom()), (0, 0, 255), 2)
-            save_path = './detections/'+img_name
-            cv2.imwrite(save_path, img)
-
-        return save_path, len(faces)
+                faces_.append([d.left(), d.top(), d.right()-d.left(), d.bottom()-d.top()]) #convert hog coordinates to: x, y, w, h
+        return faces_
     except:
         print('Image load error or no faces detected')

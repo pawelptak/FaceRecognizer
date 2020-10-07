@@ -23,4 +23,4 @@ class DropButton(RoundButton):
         if within_box_width and within_box_height:
             self.path = path
             print(self.path)
-            self.children[0].load_image(str(self.path))
+            self.children[1].load_image(str(self.path))
