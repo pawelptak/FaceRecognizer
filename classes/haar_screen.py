@@ -3,6 +3,7 @@ from functions.haar_cascade import *
 from functions.hog import *
 from functions.configuration import *
 from functions.crop_image import *
+from functions.face_alignment import *
 import tkinter as tk
 from tkinter import filedialog
 
@@ -45,12 +46,16 @@ class HAARScreen(Screen):
             save_path = './detections/' + img_name
             cv2.imwrite(save_path, cv2_image) #saving image without detections
             face_num = 1
-            for (x, y, w, h) in detection:
-                cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                cropped = crop_image(img, x, y, w, h)
-                save_path = './detections/face_'+str(face_num)+'_' + img_name
-                face_num += 1
-                cv2.imwrite(save_path, cropped)  # saving detected faces as images
+            #for (x, y, w, h) in detection:
+                #cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            for f in detection:
+                align_face(cv2_image, f)
+                cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
+                #cropped = crop_image(img, f.left(), f.top(), f.right()-f.left(), f.bottom() - f.top())
+                #save_path = './detections/face_'+str(face_num)+'_' + img_name
+                #face_num += 1
+                #cv2.imwrite(save_path, cropped)  # saving detected faces as images
+
             save_path = './detections/det_' + img_name
             cv2.imwrite(save_path, cv2_image) #saving image with detections
 
