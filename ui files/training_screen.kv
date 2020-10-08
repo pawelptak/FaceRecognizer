@@ -1,0 +1,88 @@
+#: import ew kivy.uix.effectwidget
+#:import Factory kivy.factory.Factory
+
+<TrainingScreen>:
+    name: "training"
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        canvas.before:
+            Color:
+                rgb: bck_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y:None
+            height: 50
+
+
+            Spinner:
+                id: directory_spinner
+                text: root.dir_name
+                text_size : self.width, None
+                halign:'center'
+                color: normal_text_color
+                background_normal:'./Images/light_grey.jpg'
+                background_down: './Images/pressed.jpg'
+                values: root.get_values()
+                on_text: root.on_spinner_select(directory_spinner.text)
+                option_cls: Factory.get("MySpinnerOption")
+            Label:
+                size_hint_x: .1
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: 'Current directory: '
+                    color: normal_text_color
+                    text_size: self.size
+                    halign: 'right'
+
+                Label:
+                    id: current_dir_text
+                    text: root.photos_dir
+                    color: 0,0,0,.5
+                    text_size: self.size
+                    halign: 'right'
+
+            Label:
+                size_hint_x: None
+                width: 20
+
+            RoundButton:
+                on_release: root.open_file_dialog()
+                size_hint_x: None
+                width: 50
+                Image:
+                    source: './Images/directory.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    size_hint_y:None
+                    height: 20
+                    allow_stretch: True
+                    opacity:0.5
+                    mipmap:True
+
+        Label:
+            size_hint_y:None
+            height: 20
+
+        BoxLayout:
+            orientation: 'horizontal'
+            height: 50
+            size_hint_y:None
+
+            Image:
+                id: preview
+                source: root.img_preview
+                size_hint_x:None
+                width: 50
+
+            Label:
+                size_hint_x: 3
+
+        Label:

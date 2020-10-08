@@ -11,7 +11,7 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 #importing classes. do not remove
 from classes.detection_screen import DetectionScreen
-from classes.hog_screen import HOGScreen
+from classes.training_screen import TrainingScreen
 from classes.drop_button import DropButton
 from classes.face_image import FaceImage
 from classes.screen_stack import ScreenStack
@@ -20,7 +20,7 @@ from functions.empty_dir import *
 Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
 Builder.load_file("ui files/detection_screen.kv")
-Builder.load_file("ui files/hog_screen.kv")
+Builder.load_file("ui files/training_screen.kv")
 
 #Main Screen with navigation bar on top
 class Main(GridLayout, threading.Thread):
@@ -36,7 +36,7 @@ class WindowManager(ScreenManager):
         self.stack.add_screen("detection")
 
 #main app class
-class FaceDetector(App):
+class FaceRecognizer(App):
     # loading ui files
 
     icon = 'Images/icon.png'
@@ -54,5 +54,5 @@ if __name__ == '__main__':
     del_all_files('./detections')
     clear_image_src()
 
-    FaceDetector().run()
+    FaceRecognizer().run()
     del_all_files('./detections')
