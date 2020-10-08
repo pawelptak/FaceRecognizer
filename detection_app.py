@@ -10,7 +10,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 #importing classes. do not remove
-from classes.haar_screen import HAARScreen
+from classes.detection_screen import DetectionScreen
 from classes.hog_screen import HOGScreen
 from classes.drop_button import DropButton
 from classes.face_image import FaceImage
@@ -19,7 +19,7 @@ from functions.empty_dir import *
 
 Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
-Builder.load_file("ui files/haar_screen.kv")
+Builder.load_file("ui files/detection_screen.kv")
 Builder.load_file("ui files/hog_screen.kv")
 
 #Main Screen with navigation bar on top

@@ -1,11 +1,12 @@
 import os
 import shutil
 
-#deletes all files in given directory
+#deletes all .png files in given directory
 def del_all_files(dirpath: str):
     for filename in os.listdir(dirpath):
         filepath = os.path.join(dirpath, filename)
         try:
-            shutil.rmtree(filepath)
+            if filename.endswith(".png"):
+                os.remove(filepath)
         except OSError:
             os.remove(filepath)

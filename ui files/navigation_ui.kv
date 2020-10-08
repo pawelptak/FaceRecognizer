@@ -25,12 +25,12 @@
 
             #Auto mode button
             CustButton:
-                id:auto_mode_button
-                text:"HAAR"
-                bold: True if root.manager.current=="haar" else False
+                id:detection_screen_button
+                text:"Face detection"
+                bold: True if root.manager.current=="detection" else False
                 background_down: './Images/pressed.jpg'
                 on_release:
-                    root.manager.current = "haar"
+                    root.manager.current = "detection"
                     root.manager.transition.direction = "right"
                     root.manager.stack.add_screen(root.manager.current)
                 Label:
@@ -40,7 +40,7 @@
                             rgba: header_text_color
                         Line:
                             width: 1.001
-                            points: (auto_mode_button.x,auto_mode_button.y+3,auto_mode_button.x+auto_mode_button.width,auto_mode_button.y+3)
+                            points: (detection_screen_button.x,detection_screen_button.y+3,detection_screen_button.x+detection_screen_button.width,detection_screen_button.y+3)
                             cap:'none'
 
             #Learning mode button
@@ -119,7 +119,7 @@
         id: manager
 
         #screen classes:
-        HAARScreen:
+        DetectionScreen:
         HOGScreen:
 
 

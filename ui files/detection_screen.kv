@@ -1,7 +1,7 @@
 #: import ew kivy.uix.effectwidget
 
-<HAARScreen>:
-    name: "haar"
+<DetectionScreen>:
+    name: "detection"
 
     BoxLayout:
         orientation: 'vertical'
@@ -25,74 +25,23 @@
                     size: self.size
             BoxLayout:
                 orientation:'vertical'
-
-                AnchorLayout:
-                    anchor_y: 'top'
-                    size_hint_y: None
-                    Label:
-                        text: 'HAAR face detection'
-                        color: normal_text_color
-                        bold: True
-                        font_size: '20sp'
-
-
-                BoxLayout:
-                    id: setting_box
-                    orientation: 'vertical'
-                    size_hint_y: None
-
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        Label:
-                        Label:
-                            id: setting_1_title
-                            text: 'Scale factor:'
-                            color: normal_text_color
-                            halign: 'right'
-                            size_hint_x: None
-                        CustomInput:
-                            id: setting_1_input
-                            hint: 'e.g 1.5'
-                            text: '1.5'
-                            size_hint_x: None
-                            input_filter: 'float'
-                        Label:
-
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        Label:
-                        Label:
-                            id: setting_2_title
-                            text: 'Min neighbors: '
-                            color: normal_text_color
-                            halign: 'right'
-                            size_hint_x: None
-                        CustomInput:
-                            id: setting_2_input
-                            hint: 'e.g 5'
-                            text: '5'
-                            size_hint_x: None
-                            input_filter: 'int'
-                        Label:
-
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        Label:
-                        Label:
-                            id: setting_3_title
-                            text: 'Min size: '
-                            color: normal_text_color
-                            halign: 'right'
-                            size_hint_x: None
-                        CustomInput:
-                            id: setting_3_input
-                            hint: 'e.g 10, 10'
-                            text: '10 10'
-                            size_hint_x: None
-                        Label:
-
+                Label:
                 BoxLayout:
                     orientation: 'horizontal'
+                    Label:
+                    CustomInput:
+                        id: name_input
+                        hint_text: 'Name'
+                        input_type: 'text'
+                        multiline: False
+                        size_hint_y:None
+                        height: 30
+                        size_hint_x:2.5
+                    Label:
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y:None
+
                     Label:
                     RoundButton:
                         id: detect_button
@@ -142,5 +91,12 @@
                         size: self.parent.size
                         resolution: (640, 480)
                         play: False
+                Label:
+                    id: num_loaded_text
+                    text: 'Nothing loaded'
+                    color: 0,0,0,.5
+                    opacity: 0
+                    size_hint_y:None
+                    height:20
 
 
