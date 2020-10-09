@@ -1,4 +1,6 @@
 from kivy.uix.button import Button
+from kivy.uix.image import Image
+from kivy.core.camera import Camera
 
 class RoundButton(Button):
     pass
@@ -16,3 +18,4 @@ class CustomSwitch(Button):
         else:
             self.text = 'OFF'
             self.on = False
+

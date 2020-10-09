@@ -64,22 +64,22 @@
 
             #Manual mode button
             CustButton:
-                id:manual_mode_button
-                text:"DNN"
-                bold: True if root.manager.current=="dnn" else False
+                id:recognition_screen_button
+                text:"Face recognition"
+                bold: True if root.manager.current=="recognition" else False
                 on_release:
                     root.manager.transition.direction = "left" if root.manager.current == "auto" or root.manager.current == "learning" else "right"
-                    #root.manager.current = "manual"
+                    root.manager.current = "recognition"
                     root.manager.stack.add_screen(root.manager.current)
 
                 Label:
-                    opacity:1 if root.manager.current=="dnn" else 0
+                    opacity:1 if root.manager.current=="recognition" else 0
                     canvas:
                         Color:
                             rgba: header_text_color
                         Line:
                             width: 1.001
-                            points: (manual_mode_button.x,manual_mode_button.y+3,manual_mode_button.x+manual_mode_button.width,manual_mode_button.y+3)
+                            points: (recognition_screen_button.x,recognition_screen_button.y+3,recognition_screen_button.x+recognition_screen_button.width,recognition_screen_button.y+3)
                             cap:'none'
 
             Label:
@@ -121,5 +121,6 @@
         #screen classes:
         DetectionScreen:
         TrainingScreen:
+        RecognitionScreen:
 
 

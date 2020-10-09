@@ -26,7 +26,6 @@ def prepare_training_data(dir_path):
             faces.append(cv2.imread(os.path.join(path, image), cv2.IMREAD_GRAYSCALE))
             labels.append(label)
         label += 1
-    print(faces, labels)
 
     return faces, labels
 
@@ -37,6 +36,7 @@ def train(faces, labels):
 
     #LBPH
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+
 
     #EigenFaces
     # face_recognizer = cv2.face.createEigenFaceRecognizer()

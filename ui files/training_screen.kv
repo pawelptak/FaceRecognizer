@@ -91,5 +91,23 @@
                 text: str(root.num_files) + ' files'
             Label:
                 size_hint_x: 3
-
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .2
+            Label:
+            RoundButton:
+                id: train_button
+                text: 'Begin training'
+                on_release: root.begin_training()
+            Label:
+        Label:
+            id: result_text
+            text: 'Done'
+            text_size: self.size
+            valign: 'center'
+            halign: 'center'
+            color: 0,0,0,.5
+            size_hint_y:None
+            height:40
+            opacity: 0
         Label:

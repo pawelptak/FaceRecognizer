@@ -12,6 +12,7 @@ from kivy.core.window import Window
 #importing classes. do not remove
 from classes.detection_screen import DetectionScreen
 from classes.training_screen import TrainingScreen
+from classes.recognition_screen import RecognitionScreen
 from classes.drop_button import DropButton
 from classes.face_image import FaceImage
 from classes.screen_stack import ScreenStack
@@ -21,6 +22,7 @@ Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
 Builder.load_file("ui files/detection_screen.kv")
 Builder.load_file("ui files/training_screen.kv")
+Builder.load_file("ui files/recognition_screen.kv")
 
 #Main Screen with navigation bar on top
 class Main(GridLayout, threading.Thread):

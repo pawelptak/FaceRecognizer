@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from functions.configuration import *
+#from functions.face_recognition import *
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
@@ -84,11 +85,17 @@ class TrainingScreen(Screen):
                     n += 1
         return n
 
-
-
-
     def on_spinner_select(self, name):
         self.dir_name = name
         self.num_files = self.get_file_number(name)
         self.update_values()
         print('chosen', name)
+
+    def begin_training(self):
+        faces, labels = prepare_training_data(self.photos_dir)
+        model = train(faces, labels)
+        model.write('./models/model')
+        self.ids.result_text.text = 'Done. Model saved.'
+        self.ids.result_text.opacity = 1
+
+
