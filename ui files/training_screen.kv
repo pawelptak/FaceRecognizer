@@ -81,7 +81,13 @@
                 source: root.img_preview
                 size_hint_x:None
                 width: 50
-
+                mipmap: True
+            Label:
+                id: num_files
+                color: normal_text_color
+                text_size: self.size
+                halign: 'right'
+                text: str(root.num_files) + ' files'
             Label:
                 size_hint_x: 3
 
