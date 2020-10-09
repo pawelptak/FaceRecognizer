@@ -75,7 +75,6 @@
             orientation: 'horizontal'
             height: 50
             size_hint_y:None
-
             Image:
                 id: preview
                 source: root.img_preview
@@ -87,6 +86,8 @@
                 color: normal_text_color
                 text_size: self.size
                 halign: 'right'
+                valign: 'center'
+                size_hint_x:None
                 text: str(root.num_files) + ' files'
             Label:
                 size_hint_x: 3
