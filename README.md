@@ -2,10 +2,16 @@
 Requirements: 
 
 Python 3.7,
-opencv,
-kivy (kivy-sd2, kivy-glew)
 
-dlib,
+Python libraries:
+PyYaml,
+opencv-python,
+opencv-contrib-python,
+numpy,
+kivy (kivy-sdl2, kivy-glew),
+dlib
+
+Dlib requires:
 Cmake,
 MicrosoftVisualStudio with C++ libraries
 
