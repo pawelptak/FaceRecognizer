@@ -19,7 +19,7 @@ class DetectionScreen(Screen):
                 for image in self.file_names:
                     self.ids.face_image.source = image
                     self.ids.face_image.reload()
-                    detected = face_detect(self.ids.face_image.source, self.detections_path, self.ids.name_input.text)
+                    detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
             elif self.ids.cam.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'

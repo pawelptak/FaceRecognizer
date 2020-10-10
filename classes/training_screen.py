@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from functions.configuration import *
-#from functions.face_recognition import *
+from functions.face_recognition import *
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'

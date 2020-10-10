@@ -40,7 +40,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
     except:
         print('Image load error or no faces detected')
 
-def align_face(img, d, save_path, name):
+def align_face(img, d, save_path, name, draw_landmarks: bool):
     #img = cv2.imread(img_path)
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -60,14 +60,15 @@ def align_face(img, d, save_path, name):
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
 
-    for i in range(0, 68):
-        x = landmarks.part(i).x
-        y = landmarks.part(i).y
-        cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
+    if draw_landmarks:
+        for i in range(0, 68):
+            x = landmarks.part(i).x
+            y = landmarks.part(i).y
+            cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
 
 
 
-def face_detect(image_path, save_path, face_name): #hog or haar face detection with alignment, returns path to image with detections and number of detetions
+def face_detect(image_path, save_path, face_name, draw_landmarks: bool): #hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
 
     img_name = os.path.basename(image_path)
 
@@ -76,6 +77,7 @@ def face_detect(image_path, save_path, face_name): #hog or haar face detection w
 
     #HOG detection
     detection = face_detect_hog(image_path)
+
     num_detected = len(detection)
     if num_detected is not 0:
         cv2_image = cv2.imread(image_path)
@@ -87,11 +89,11 @@ def face_detect(image_path, save_path, face_name): #hog or haar face detection w
             #cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         for f in detection:
-            align_face(cv2_image, f, save_path, face_name)
+            align_face(cv2_image, f, save_path, face_name, draw_landmarks)
             cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
 
         save_path += 'det_' + img_name
         cv2.imwrite(save_path, cv2_image) #saving image with detections
     else:
         save_path = 'No faces detected'
-    return save_path, num_detected
+    return save_path, num_detected, detection
