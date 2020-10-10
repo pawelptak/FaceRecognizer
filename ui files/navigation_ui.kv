@@ -33,15 +33,9 @@
                     root.manager.current = "detection"
                     root.manager.transition.direction = "right"
                     root.manager.stack.add_screen(root.manager.current)
-                Label:
+                NavigationLine:
                     opacity:1 if root.manager.current=="detection" else 0
-                    canvas:
-                        Color:
-                            rgba: header_text_color
-                        Line:
-                            width: 1.001
-                            points: (detection_screen_button.x,detection_screen_button.y+3,detection_screen_button.x+detection_screen_button.width,detection_screen_button.y+3)
-                            cap:'none'
+
 
             #Learning mode button
             CustButton:
@@ -52,15 +46,8 @@
                     root.manager.transition.direction = "left" if root.manager.current == "auto" else "right"
                     root.manager.current = "training"
                     root.manager.stack.add_screen(root.manager.current)
-                Label:
+                NavigationLine:
                     opacity:1 if root.manager.current=="training" else 0
-                    canvas:
-                        Color:
-                            rgba: header_text_color
-                        Line:
-                            width: 1.001
-                            points: (training_screen_button.x,training_screen_button.y+3,training_screen_button.x+training_screen_button.width,training_screen_button.y+3)
-                            cap:'none'
 
             #Manual mode button
             CustButton:
@@ -71,16 +58,8 @@
                     root.manager.transition.direction = "left" if root.manager.current == "auto" or root.manager.current == "learning" else "right"
                     root.manager.current = "recognition"
                     root.manager.stack.add_screen(root.manager.current)
-
-                Label:
+                NavigationLine:
                     opacity:1 if root.manager.current=="recognition" else 0
-                    canvas:
-                        Color:
-                            rgba: header_text_color
-                        Line:
-                            width: 1.001
-                            points: (recognition_screen_button.x,recognition_screen_button.y+3,recognition_screen_button.x+recognition_screen_button.width,recognition_screen_button.y+3)
-                            cap:'none'
 
             Label:
                 size_hint_x:1.5

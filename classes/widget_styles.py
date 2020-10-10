@@ -2,6 +2,9 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 
 
+class CustButton(Button):
+    pass
+
 class RoundButton(Button):
     pass
 

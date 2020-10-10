@@ -1,11 +1,12 @@
 #defining colors and fonts:
 #:set workspace_bck_color (1,1,1)
-#:set bck_color (231/255,231/255,233/255)
+#:set bck_color (220/255,220/255,220/255)
 #:set normal_text_color (0.2,0.2,0.2,1)
 #:set header_text_color (0/255,102/255,178/255,1)
 #:set ok_text_color (82/255,184/255,111/255,1)
 #:set area_color (82/255,184/255,111/255,.5)
 #:set nok_text_color (210/255,48/255,64/255,1)
+#:set accent_color (0/255,189/255,155/255,1)
 
 #top naviation bar style
 <TabBar@GridLayout>:
@@ -20,13 +21,22 @@
     background_normal:''
     background_down: './Images/pressed.jpg'
 
+<NavigationLine@Label>
+    canvas:
+        Color:
+            rgba: accent_color
+        Line:
+            width: 1.001
+            points: (self.parent.x,self.parent.y+3,self.parent.x+self.parent.width,self.parent.y+3)
+            cap:'none'
+
 <RoundButton@Button>
     background_color:0,0,0,0
     color: normal_text_color
     disabled_color: normal_text_color
     canvas.before:
         Color:
-            rgb:(.94,.94,.94,1) if self.state == 'normal' else (.9, .9, .9, 1)
+            rgb:(.94,.94,.94,1) if self.state == 'normal' else accent_color
         RoundedRectangle:
             size: (self.size)
             pos: (self.pos)
