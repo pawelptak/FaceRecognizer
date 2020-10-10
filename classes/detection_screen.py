@@ -21,13 +21,13 @@ class DetectionScreen(Screen):
                     self.ids.face_image.source = image
                     self.ids.face_image.reload()
                     detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
-            elif self.ids.cam.play:
+            elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'
                 self.ids.cam_box.export_to_png(file_name)
                 self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
                 self.ids.face_image.load_image(file_name)
-                detected = face_detect(file_name, self.detections_path, self.ids.name_input.text)
+                detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
             if os.path.isfile(detected[0]):
                 self.ids.face_image.source = detected[0]
             self.ids.face_image.reload()
@@ -60,17 +60,16 @@ class DetectionScreen(Screen):
 
         self.ids.num_loaded_text.opacity = 0
         self.ids.image_boxlayout.remove_widget(self.ids.face_image)
-        cam = Camera(x=self.ids.image_button.x, y=self.ids.image_button.y, size=self.ids.image_button.size,
-                     resolution=(640, 480),
-                     play=False)
+        #cam = Camera(x=self.ids.image_button.x, y=self.ids.image_button.y, size=self.ids.image_button.size, resolution=(640, 480), play=False)
         if self.ids.camera_switch.text == 'OFF':
-            self.ids.image_button.add_widget(cam)
-            cam.play = True
-            #self.ids.cam_box.play = True
+            #self.ids.image_button.add_widget(cam)
+            #cam.play = True
+            self.ids.cam_box.play = True
             self.ids.face_image.reset_image()
-            #self.ids.cam_box.opacity = 1
+            self.ids.cam_box.opacity = 1
             self.ids.image_button.disabled = True
-
         else:
-            self.ids.image_button.remove_widget(cam)
+            #self.ids.image_button.remove_widget(cam)
             self.ids.image_button.disabled = False
+            self.ids.cam_box.play = False
+            self.ids.cam_box.opacity = 0

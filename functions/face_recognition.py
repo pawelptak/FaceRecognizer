@@ -20,6 +20,7 @@ def prepare_training_data(dir_path):
     label = 1
     for dir_name in dirs:
         path = os.path.join(dir_path, dir_name)
+        print('ddd', path)
         if os.path.isdir(path):
             images = os.listdir(path)
             for image in images:

@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 from functions.configuration import *
 from functions.face_recognition import *
+from functions.empty_dir import *
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
@@ -13,11 +14,13 @@ class TrainingScreen(Screen):
 
     def __init__(self, **kw):
         super().__init__(**kw)
-        first_dir = self.get_values()[0]
-        if first_dir is not None:
-            self.dir_name = first_dir  # show first directory on the spinner
-        else:
-            self.dir_name = 'None'
+        directories = self.get_values()
+        if directories:
+            first_dir = directories[0]
+            if first_dir is not None:
+                self.dir_name = first_dir  # show first directory on the spinner
+            else:
+                self.dir_name = 'None'
         self.num_files = self.get_file_number(self.dir_name)
         img_source = self.get_img_preview()
         self.img_preview = img_source
@@ -99,6 +102,7 @@ class TrainingScreen(Screen):
         self.ids.result_text.opacity = 1
 
     def on_pre_enter(self, *args):
+        del_all_files('./detections')
         self.update_values()
 
 

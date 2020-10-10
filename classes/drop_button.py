@@ -1,6 +1,7 @@
 from classes.widget_styles import RoundButton
 from kivy.core.window import Window
 from pathlib import Path
+from classes.face_image import FaceImage
 
 #button to drag and drop files on
 class DropButton(RoundButton):
@@ -23,4 +24,7 @@ class DropButton(RoundButton):
         if within_box_width and within_box_height:
             self.path = path
             print(self.path)
-            self.children[1].load_image(str(self.path))
+            for child in self.children:
+                if isinstance(child, FaceImage):
+                    child.load_image(str(self.path))
+
