@@ -98,4 +98,7 @@ class TrainingScreen(Screen):
         self.ids.result_text.text = 'Done. Model saved.'
         self.ids.result_text.opacity = 1
 
+    def on_pre_enter(self, *args):
+        self.update_values()
+
 
