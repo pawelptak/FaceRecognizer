@@ -40,7 +40,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
     except:
         print('Image load error or no faces detected')
 
-def align_face(img, d, name):
+def align_face(img, d, save_path, name):
     #img = cv2.imread(img_path)
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -51,14 +51,15 @@ def align_face(img, d, name):
 
     now = datetime.now()
     dt_string = now.strftime("%d%m%Y_%H%M%S")
-    save_path = './detections/' + name + '/'
+
+    save_path += name + '/'
+    #save_path = './detections/' + name + '/'
+    print('TEST', save_path)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     save_path += name + '_' + dt_string+'.jpg'
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
-
-
 
     for i in range(0, 68):
         x = landmarks.part(i).x
@@ -67,7 +68,7 @@ def align_face(img, d, name):
 
 
 
-def face_detect(image_path, face_name): #hog or haar face detection with alignment, returns path to image with detections and number of detetions
+def face_detect(image_path, save_path, face_name): #hog or haar face detection with alignment, returns path to image with detections and number of detetions
 
     img_name = os.path.basename(image_path)
 
@@ -79,17 +80,18 @@ def face_detect(image_path, face_name): #hog or haar face detection with alignme
     num_detected = len(detection)
     if num_detected is not 0:
         cv2_image = cv2.imread(image_path)
-        save_path = './detections/' + img_name
-        cv2.imwrite(save_path, cv2_image) #saving image without detections
+        #save_path = './detections/' + img_name
+        org_img_path = save_path + img_name
+        cv2.imwrite(org_img_path, cv2_image) #saving image without detections
 
         #for (x, y, w, h) in detection:
             #cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         for f in detection:
-            align_face(cv2_image, f, face_name)
+            align_face(cv2_image, f, save_path, face_name)
             cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
 
-        save_path = './detections/det_' + img_name
+        save_path += 'det_' + img_name
         cv2.imwrite(save_path, cv2_image) #saving image with detections
     else:
         save_path = 'No faces detected'

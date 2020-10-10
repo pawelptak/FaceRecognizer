@@ -8,7 +8,7 @@ from functions.face_detection import *
 class DetectionScreen(Screen):
     image_source = ''
     file_names = ''
-
+    detections_path = './detections/'
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -19,14 +19,14 @@ class DetectionScreen(Screen):
                 for image in self.file_names:
                     self.ids.face_image.source = image
                     self.ids.face_image.reload()
-                    detected = face_detect(self.ids.face_image.source, self.ids.name_input.text)
+                    detected = face_detect(self.ids.face_image.source, self.detections_path, self.ids.name_input.text)
             elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'
                 self.ids.cam_box.export_to_png(file_name)
                 self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
                 self.ids.face_image.load_image(file_name)
-                detected = face_detect(file_name, self.ids.name_input.text)
+                detected = face_detect(file_name, self.detections_path, self.ids.name_input.text)
             if os.path.isfile(detected[0]):
                 self.ids.face_image.source = detected[0]
             self.ids.face_image.reload()

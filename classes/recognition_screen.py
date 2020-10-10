@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from functions.configuration import *
 import tkinter as tk
 from tkinter import filedialog
+from functions.face_detection import *
 
 class RecognitionScreen(Screen):
     image_source = ''
@@ -9,6 +10,27 @@ class RecognitionScreen(Screen):
 
     def __init__(self, **kw):
         super().__init__(**kw)
+
+
+    def detect(self):
+        detected = 'Nothing'
+        if self.ids.face_image.image_loaded:
+            for image in self.file_names:
+                self.ids.face_image.source = image
+                self.ids.face_image.reload()
+                detected = face_detect(self.ids.face_image.source, '')
+        elif self.ids.cam_box.play:
+            print('camera enabled')
+            file_name = './detections/selfie.png'
+            self.ids.cam_box.export_to_png(file_name)
+            self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
+            self.ids.face_image.load_image(file_name)
+            detected = face_detect(file_name, self.ids.name_input.text)
+        if os.path.isfile(detected[0]):
+            self.ids.face_image.source = detected[0]
+        self.ids.face_image.reload()
+        self.ids.result.text = 'Faces detected: ' + str(detected[1])
+        self.ids.result.opacity = 1
 
     def load_image_source(self):
         img_source = load_config()
