@@ -18,9 +18,14 @@ class RecognitionScreen(Screen):
 
         root = tk.Tk()
         root.withdraw()
-        file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
+        #file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
+        file_name = filedialog.askopenfilename(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
 
         self.get_root_window().raise_window()  # set focus on window
 
-        self.file_names = file_names
-        self.ids.face_image.load_image(self.file_names[0])
+        if file_name:
+        #self.file_names = file_names
+            self.file_names = file_name
+            self.ids.face_image.load_image(self.file_names)
+
+
