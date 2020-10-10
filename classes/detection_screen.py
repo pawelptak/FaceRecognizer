@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 from kivy.uix.camera import Camera
 from functions.face_detection import *
+import threading
 
 class DetectionScreen(Screen):
     image_source = ''

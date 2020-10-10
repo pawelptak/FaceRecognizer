@@ -19,15 +19,13 @@ def prepare_training_data(dir_path):
     labels = []
     label = 1
     for dir_name in dirs:
-        if os.path.isdir(dir_name):
-            path = os.path.join(dir_path, dir_name)
+        path = os.path.join(dir_path, dir_name)
+        if os.path.isdir(path):
             images = os.listdir(path)
-
             for image in images:
                 faces.append(cv2.imread(os.path.join(path, image), cv2.IMREAD_GRAYSCALE))
                 labels.append(label)
-        label += 1
-
+            label += 1
     return faces, labels
 
 
