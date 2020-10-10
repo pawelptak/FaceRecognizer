@@ -55,6 +55,8 @@ if __name__ == '__main__':
         os.makedirs('./detections')
     del_all_files('./detections')
     clear_image_src()
+    del_all_files('./recognitions')
 
     FaceRecognizer().run()
     del_all_files('./detections')
+    del_all_files('./recognitions')
