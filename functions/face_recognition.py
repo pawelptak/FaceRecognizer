@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-
+from classes.face_image import FaceImage
 
 def create_label_dictionary(dir_path):
     dict = {}
@@ -19,13 +19,13 @@ def prepare_training_data(dir_path):
     labels = []
     label = 1
     for dir_name in dirs:
-        print('DA',dir_name)
-        path = os.path.join(dir_path, dir_name)
-        images = os.listdir(path)
+        if os.path.isdir(dir_name):
+            path = os.path.join(dir_path, dir_name)
+            images = os.listdir(path)
 
-        for image in images:
-            faces.append(cv2.imread(os.path.join(path, image), cv2.IMREAD_GRAYSCALE))
-            labels.append(label)
+            for image in images:
+                faces.append(cv2.imread(os.path.join(path, image), cv2.IMREAD_GRAYSCALE))
+                labels.append(label)
         label += 1
 
     return faces, labels
