@@ -40,7 +40,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
     except:
         print('Image load error or no faces detected')
 
-def align_face(img, d, save_path, name, draw_landmarks: bool):
+def align_face(img, d, save_path, name):
     #img = cv2.imread(img_path)
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -59,16 +59,15 @@ def align_face(img, d, save_path, name, draw_landmarks: bool):
     save_path += name + '_' + dt_string+'.jpg'
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
+    return landmarks
 
-    if draw_landmarks:
-        for i in range(0, 68):
-            x = landmarks.part(i).x
-            y = landmarks.part(i).y
-            cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
+def draw_landmarks(img, landmarks):
+    for i in range(0, 68):
+        x = landmarks.part(i).x
+        y = landmarks.part(i).y
+        cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
 
-
-
-def face_detect(image_path, save_path, face_name, draw_landmarks: bool): #hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
+def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
 
     img_name = os.path.basename(image_path)
 
@@ -87,9 +86,13 @@ def face_detect(image_path, save_path, face_name, draw_landmarks: bool): #hog or
 
         #for (x, y, w, h) in detection:
             #cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
+        landmarks = []
         for f in detection:
-            align_face(cv2_image, f, save_path, face_name, draw_landmarks)
+            landmarks.append(align_face(cv2_image, f, save_path, face_name))
+
+        if draw_points:
+            for i in landmarks:
+                    draw_landmarks(cv2_image, i)
 
         for f in detection:
             cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)

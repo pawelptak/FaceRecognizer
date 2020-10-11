@@ -22,7 +22,7 @@ class RecognitionScreen(Screen):
             self.ids.face_image.reload()
             del_all_files(detection_path) #empty detection directory
             del_all_files(self.recognitions_path)  # empty detection directory
-            detected = face_detect(image_path=self.ids.face_image.source, save_path=self.recognitions_path, face_name=self.face_name, draw_landmarks=False)
+            detected = face_detect(image_path=self.ids.face_image.source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
         elif self.ids.cam_box.play:
             print('camera enabled')
             file_name = './detections/selfie.png'

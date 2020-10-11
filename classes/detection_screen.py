@@ -25,7 +25,7 @@ class DetectionScreen(Screen):
                     self.ids.face_image.source = image
                     self.ids.face_image.reload()
 
-                    detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
+                    detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
 
             elif self.ids.cam_box.play:
                 print('camera enabled')
@@ -33,7 +33,7 @@ class DetectionScreen(Screen):
                 self.ids.cam_box.export_to_png(file_name)
                 self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
                 self.ids.face_image.load_image(file_name)
-                detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
+                detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
             if os.path.isfile(detected[0]):
                 self.ids.face_image.source = detected[0]
             self.ids.face_image.reload()
