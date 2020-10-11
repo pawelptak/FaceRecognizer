@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 from kivy.uix.camera import Camera
 from functions.face_detection import *
-import threading
+from functions.empty_dir import *
 
 class DetectionScreen(Screen):
     image_source = ''
@@ -14,17 +14,19 @@ class DetectionScreen(Screen):
         super().__init__(**kw)
 
     def detect(self):
+        del_all_files(self.detections_path)
         if self.ids.name_input.text != '':
             detected = 'Nothing'
             if self.ids.face_image.image_loaded:
-                if self.file_names == '':
-                    self.file_names = []
-                    self.file_names.append(self.load_image_source())
+                self.file_names = []
+                self.file_names.append(self.load_image_source())
+                print('maupa', self.file_names)
                 for image in self.file_names:
                     self.ids.face_image.source = image
                     self.ids.face_image.reload()
+
                     detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_landmarks=True)
-                    print(detected)
+
             elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'
