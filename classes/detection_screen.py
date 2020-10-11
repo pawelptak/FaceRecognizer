@@ -18,8 +18,9 @@ class DetectionScreen(Screen):
         if self.ids.name_input.text != '':
             detected = 'Nothing'
             if self.ids.face_image.image_loaded:
-                self.file_names = []
-                self.file_names.append(self.load_image_source())
+                if self.file_names == '':
+                    self.file_names = []
+                    self.file_names.append(self.load_image_source())
                 print('maupa', self.file_names)
                 for image in self.file_names:
                     self.ids.face_image.source = image
