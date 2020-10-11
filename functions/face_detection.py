@@ -90,7 +90,10 @@ def face_detect(image_path, save_path, face_name, draw_landmarks: bool): #hog or
 
         for f in detection:
             align_face(cv2_image, f, save_path, face_name, draw_landmarks)
+
+        for f in detection:
             cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
+
 
         save_path += 'det_' + img_name
         cv2.imwrite(save_path, cv2_image) #saving image with detections
