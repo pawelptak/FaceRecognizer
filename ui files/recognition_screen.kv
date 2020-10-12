@@ -24,6 +24,30 @@
                 y: self.parent.y
                 size: self.parent.size
                 opacity: .3 if self.source == './Images/image.png' else 1
+        Label:
+            size_hint_y:None
+            height: 10
+        BoxLayout:
+            id: nav_buttons_box
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+            RoundButton:
+                size_hint_x:.2
+                text: '<'
+                font_size: 20
+                color: 0,0,0,.5
+                on_release: root.previous_img()
+            Label:
+                size_hint_x:.05
+            RoundButton:
+                size_hint_x:.2
+                text: '>'
+                font_size: 20
+                color: 0,0,0,.5
+                on_release: root.next_img()
+            Label:
+
 
 
 

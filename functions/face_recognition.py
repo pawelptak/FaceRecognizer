@@ -39,16 +39,16 @@ def train(faces, labels):
 
 
     #EigenFaces
-    # face_recognizer = cv2.face.createEigenFaceRecognizer()
+    #face_recognizer = cv2.face.EigenFaceRecognizer_create()
 
     #FisherFaces
-    # face_recognizer = cv2.face.createFisherFaceRecognizer()
+    #face_recognizer = cv2.face.createFisherFaceRecognizer()
 
     face_recognizer.train(faces, np.array(labels)) #cv2 face recognizer expects numpy array
 
     return face_recognizer
 
-def recognize(img, recognizer: cv2.face_LBPHFaceRecognizer, detections_dir):
+def recognize(img, recognizer, detections_dir):
     #put face detection function
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     label = recognizer.predict(img) #returns label and confidence (distance) - the longer the distance the less accuracy

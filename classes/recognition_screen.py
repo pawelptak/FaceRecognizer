@@ -11,6 +11,9 @@ class RecognitionScreen(Screen):
     file_names = ''
     recognitions_path = './recognitions/'
     face_name = 'detection'
+    recognition_imgs = []
+    selected_index = 0
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -18,10 +21,6 @@ class RecognitionScreen(Screen):
         detected = 'Nothing'
         detection_path = self.recognitions_path+self.face_name + '/'
         if self.ids.face_image.image_loaded:
-            self.ids.face_image.source = self.file_names
-            self.ids.face_image.reload()
-            del_all_files(detection_path) #empty detection directory
-            del_all_files(self.recognitions_path)  # empty detection directory
             detected = face_detect(image_path=self.ids.face_image.source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
         elif self.ids.cam_box.play:
             print('camera enabled')
@@ -35,7 +34,12 @@ class RecognitionScreen(Screen):
         print('detected: ', str(detected[1]), 'saved in:', detection_path)
 
         detection_results = []
+
+        #LBPH
         model = cv2.face.LBPHFaceRecognizer_create()
+
+        #Eigenfaces
+        #model = cv2.face.EigenFaceRecognizer_create()
         model.read('./models/model')
 
         for filename in os.listdir(detection_path):
@@ -50,6 +54,18 @@ class RecognitionScreen(Screen):
                                          cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 0, 0), 2)
             cv2.imwrite(detected[0], cv2_image)
             self.ids.face_image.source = detected[0]
+            self.recognition_imgs = self.get_recognition_images(self.recognitions_path)
+
+
+    def get_recognition_images(self, dir_path): #returns list of images in given directory with a name starting with 'det'
+        recognitions = []
+        if os.path.isdir(dir_path):
+            for file_name in os.listdir(dir_path):
+                if file_name.startswith('det_'):
+                    file_path = os.path.join(dir_path, file_name)
+                    recognitions.append(file_path)
+        return recognitions
+
 
 
     def load_image_source(self):
@@ -57,18 +73,32 @@ class RecognitionScreen(Screen):
         return img_source
 
     def open_file_dialog(self):
+        detection_path = self.recognitions_path + self.face_name + '/'
+        del_all_files(detection_path)  # empty detection directory
+        del_all_files(self.recognitions_path)  # empty detection directory
+        self.results = []
 
         root = tk.Tk()
         root.withdraw()
-        #file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
-        file_name = filedialog.askopenfilename(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
+
+        file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
 
         self.get_root_window().raise_window()  # set focus on window
 
-        if file_name:
-        #self.file_names = file_names
-            self.file_names = file_name
-            self.ids.face_image.load_image(self.file_names)
-            self.detect()
+        if len(file_names) > 0:
+            for file_name in file_names:
+                self.ids.face_image.load_image(file_name)
+                self.detect()
 
+    def next_img(self):
+        if self.selected_index < len(self.recognition_imgs) - 1:
+            self.selected_index += 1
+            self.ids.face_image.source = self.recognition_imgs[self.selected_index]
+        print('index:', self.selected_index)
+
+    def previous_img(self):
+        if self.selected_index > 0:
+            self.selected_index -= 1
+            self.ids.face_image.source = self.recognition_imgs[self.selected_index]
+        print('index:', self.selected_index)
 

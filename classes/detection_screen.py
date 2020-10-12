@@ -8,7 +8,7 @@ from functions.empty_dir import *
 
 class DetectionScreen(Screen):
     image_source = ''
-    file_names = ''
+    file_names = []
     detections_path = './detections/'
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -18,14 +18,8 @@ class DetectionScreen(Screen):
         if self.ids.name_input.text != '':
             detected = 'Nothing'
             if self.ids.face_image.image_loaded:
-                if self.file_names == '':
-                    self.file_names = []
-                    self.file_names.append(self.load_image_source())
-                print('maupa', self.file_names)
-                for image in self.file_names:
-                    self.ids.face_image.source = image
-                    self.ids.face_image.reload()
-
+                for file_name in self.file_names:
+                    self.ids.face_image.source = file_name
                     detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
 
             elif self.ids.cam_box.play:
@@ -43,7 +37,7 @@ class DetectionScreen(Screen):
 
 
     def open_file_dialog(self):
-
+        self.file_names = []
         root = tk.Tk()
         root.withdraw()
         file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
@@ -51,10 +45,11 @@ class DetectionScreen(Screen):
         self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            self.file_names = file_names
-            self.ids.face_image.load_image(self.file_names[0])
             self.ids.num_loaded_text.opacity = 1
-            self.ids.num_loaded_text.text = str(len(self.file_names)) + ' loaded'
+            self.ids.num_loaded_text.text = str(len(file_names)) + ' loaded'
+            for file_name in file_names:
+                self.ids.face_image.load_image(file_name)
+                self.file_names.append(file_name)
 
 
     def load_image_source(self):

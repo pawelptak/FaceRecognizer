@@ -84,7 +84,7 @@ class TrainingScreen(Screen):
         path = os.path.join(self.photos_dir, dir_name)
         if os.path.isdir(path):
             for file_name in os.listdir(path):
-                if file_name.endswith('.jpg'):
+                if file_name.endswith('.jpg') or file_name.endswith('.png'):
                     n += 1
         return n
 
