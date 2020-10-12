@@ -13,6 +13,8 @@ class RecognitionScreen(Screen):
     face_name = 'detection'
     recognition_imgs = []
     selected_index = 0
+    number_correct = 0
+    number_incorrect = 0
 
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -45,7 +47,8 @@ class RecognitionScreen(Screen):
         for filename in os.listdir(detection_path):
              file_path = os.path.join(detection_path, filename)
              detection_results.append(recognize(file_path, model, './detections'))
-        print('123123',detection_results)
+        print(detection_results)
+
         if os.path.isfile(detected[0]):
             cv2_image = cv2.imread(detected[0])
             faces = detected[2]
@@ -73,8 +76,11 @@ class RecognitionScreen(Screen):
         return img_source
 
     def open_file_dialog(self):
+        self.number_correct = 0
+        self.number_incorrect = 0
+        self.selected_index = 0
         detection_path = self.recognitions_path + self.face_name + '/'
-        del_all_files(detection_path)  # empty detection directory
+
         del_all_files(self.recognitions_path)  # empty detection directory
         self.results = []
 
@@ -89,6 +95,7 @@ class RecognitionScreen(Screen):
             for file_name in file_names:
                 self.ids.face_image.load_image(file_name)
                 self.detect()
+                del_all_files(detection_path)  # empty detection directory
 
     def next_img(self):
         if self.selected_index < len(self.recognition_imgs) - 1:
@@ -102,3 +109,17 @@ class RecognitionScreen(Screen):
             self.ids.face_image.source = self.recognition_imgs[self.selected_index]
         print('index:', self.selected_index)
 
+    def rate_image(self, correct: bool):
+        if self.recognition_imgs:
+            if correct:
+                self.number_correct += 1
+                print(self.number_correct, 'correct')
+            else:
+                self.number_incorrect += 1
+                print(self.number_incorrect,'icorrect')
+            self.next_img()
+            number_rated = self.number_correct + self.number_incorrect
+            accuracy = self.number_correct/len(self.recognition_imgs)
+            accuracy = "{:.0%}".format(accuracy)
+            if number_rated == len(self.recognition_imgs):
+                print(str(self.number_correct),'out of', str(len(self.recognition_imgs)),'Accuracy:',str(accuracy))
