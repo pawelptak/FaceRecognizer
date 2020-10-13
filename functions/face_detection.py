@@ -52,11 +52,13 @@ def align_face(img, d, save_path, name):
     now = datetime.now()
     dt_string = now.strftime("%d%m%Y_%H%M%S")
 
-    save_path += name + '/'
-
+    #save_path += name + '/'
+    save_path = os.path.join(save_path, name)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save_path += name + '_' + dt_string+'.jpg'
+    #save_path += name + '_' + dt_string+'.jpg'
+    file_name = name + '_' + dt_string+'.jpg'
+    save_path = os.path.join(save_path, file_name)
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
     return landmarks
@@ -81,7 +83,8 @@ def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or ha
     if num_detected is not 0:
         cv2_image = cv2.imread(image_path)
 
-        org_img_path = save_path + img_name
+        #org_img_path = save_path + img_name
+        org_img_path = os.path.join(save_path, img_name)
         cv2.imwrite(org_img_path, cv2_image) #saving image without detections
 
         #for (x, y, w, h) in detection:
@@ -98,7 +101,9 @@ def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or ha
             cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
 
 
-        save_path += 'det_' + img_name
+        #save_path += 'det_' + img_name
+        detected_filename = 'det_' + img_name
+        save_path = os.path.join(save_path, detected_filename)
         cv2.imwrite(save_path, cv2_image) #saving image with detections
     else:
         save_path = 'No faces detected'

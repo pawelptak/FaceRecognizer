@@ -21,7 +21,7 @@ class RecognitionScreen(Screen):
 
     def detect(self):
         detected = 'Nothing'
-        detection_path = self.recognitions_path+self.face_name + '/'
+        detection_path = os.path.join(self.recognitions_path, self.face_name)
         if self.ids.face_image.image_loaded:
             detected = face_detect(image_path=self.ids.face_image.source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
         elif self.ids.cam_box.play:
