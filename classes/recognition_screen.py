@@ -76,11 +76,11 @@ class RecognitionScreen(Screen):
         return img_source
 
     def open_file_dialog(self):
+        self.ids.accuracy_text.opacity = 0
         self.number_correct = 0
         self.number_incorrect = 0
         self.selected_index = 0
         detection_path = self.recognitions_path + self.face_name + '/'
-
         del_all_files(self.recognitions_path)  # empty detection directory
         self.results = []
 
@@ -96,6 +96,7 @@ class RecognitionScreen(Screen):
                 self.ids.face_image.load_image(file_name)
                 self.detect()
                 del_all_files(detection_path)  # empty detection directory
+            self.ids.face_image.load_image(self.recognition_imgs[self.selected_index]) #show first image
 
     def next_img(self):
         if self.selected_index < len(self.recognition_imgs) - 1:
@@ -122,4 +123,6 @@ class RecognitionScreen(Screen):
             accuracy = self.number_correct/len(self.recognition_imgs)
             accuracy = "{:.0%}".format(accuracy)
             if number_rated == len(self.recognition_imgs):
+                self.ids.accuracy_text.opacity = 1
+                self.ids.accuracy_text.text = 'Correct: ' + str(self.number_correct) + '/' + str(len(self.recognition_imgs)) + ', Accuracy: ' + str(accuracy)
                 print(str(self.number_correct),'out of', str(len(self.recognition_imgs)),'Accuracy:',str(accuracy))

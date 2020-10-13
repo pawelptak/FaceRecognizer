@@ -25,8 +25,16 @@
                 size: self.parent.size
                 opacity: .3 if self.source == './Images/image.png' else 1
         Label:
-            size_hint_y:None
-            height: 10
+            id: accuracy_text
+            size_hint_y: None
+            height: 20
+            color: normal_text_color
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+            text: 'Correct: 15/20, Accuracy: 75%'
+            bold: True
+            opacity: 0
         BoxLayout:
             id: nav_buttons_box
             orientation: 'horizontal'
