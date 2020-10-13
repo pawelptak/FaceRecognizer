@@ -23,7 +23,6 @@ def load_label_dictionary(dictionary_savepath):
 
 def prepare_training_data(dir_path):
     dirs = os.listdir(dir_path)
-    dic = create_label_dictionary(dir_path, './models')
 
     faces = []
     labels = []
