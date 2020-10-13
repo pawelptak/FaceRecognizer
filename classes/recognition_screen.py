@@ -46,7 +46,7 @@ class RecognitionScreen(Screen):
 
         for filename in os.listdir(detection_path):
              file_path = os.path.join(detection_path, filename)
-             detection_results.append(recognize(file_path, model, './detections'))
+             detection_results.append(recognize(file_path, model, load_label_dictionary('./models')))
         print(detection_results)
 
         if os.path.isfile(detected[0]):

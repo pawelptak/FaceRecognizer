@@ -1,19 +1,29 @@
 import os
+import pickle
+
 import cv2
 import numpy as np
 from classes.face_image import FaceImage
 
-def create_label_dictionary(dir_path):
+def create_label_dictionary(dir_path, dictionary_savepath):
     dict = {}
     dirs = os.listdir(dir_path)
     label = 1
     for dir_name in dirs:
         dict[label] = dir_name
         label += 1
-    return dict
+    save_path = os.path.join(dictionary_savepath, 'label_dic.pkl')
+    with open(save_path, 'wb') as f:
+        pickle.dump(dict, f, pickle.HIGHEST_PROTOCOL)
+
+def load_label_dictionary(dictionary_savepath):
+    save_path = os.path.join(dictionary_savepath, 'label_dic.pkl')
+    with open(save_path, 'rb') as f:
+        return pickle.load(f)
 
 def prepare_training_data(dir_path):
     dirs = os.listdir(dir_path)
+    dic = create_label_dictionary(dir_path, './models')
 
     faces = []
     labels = []
@@ -48,22 +58,17 @@ def train(faces, labels):
 
     return face_recognizer
 
-def recognize(img, recognizer, detections_dir):
+def recognize(img, recognizer, label_dictionary):
     #put face detection function
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     label = recognizer.predict(img) #returns label and confidence (distance) - the longer the distance the less accuracy
 
-    dic = create_label_dictionary(detections_dir)
-    print(dic[label[0]], label[1])
-    return dic[label[0]], label[1]
-
-
+    print(label_dictionary[label[0]], label[1])
+    return label_dictionary[label[0]], label[1]
 
 
 if __name__ == '__main__':
     faces, labels = prepare_training_data('../detections')
+    dictionary = load_label_dictionary('../models')
     recognizer = train(faces, labels)
-    recognize('../Images/nieznany.jpg',recognizer, '../detections')
-    recognize('../Images/dor.jpg', recognizer, '../detections')
-    recognize('../Images/nieznany2.jpg', recognizer, '../detections')
-    recognize('../Images/add.png', recognizer, '../detections')
+    recognize('../Images/add.png', recognizer, dictionary)
