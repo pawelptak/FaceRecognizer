@@ -29,7 +29,6 @@ def prepare_training_data(dir_path):
     label = 1
     for dir_name in dirs:
         path = os.path.join(dir_path, dir_name)
-        print('ddd', path)
         if os.path.isdir(path):
             images = os.listdir(path)
             for image in images:
@@ -39,7 +38,18 @@ def prepare_training_data(dir_path):
     return faces, labels
 
 
-def load_model_file(path):
+def load_model_file(path, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
+
+    if algorithm == 1:
+        #LBPH
+        model = cv2.face.LBPHFaceRecognizer_create()
+    elif algorithm == 2:
+        #EigenFaces
+        model = cv2.face.EigenFaceRecognizer_create()
+    else:
+        #FisherFaces
+        model = cv2.face.createFisherFaceRecognizer()
+
     # LBPH
     model = cv2.face.LBPHFaceRecognizer_create()
 
@@ -53,21 +63,22 @@ def load_model_file(path):
     print('Model file loaded.')
     return model
 
-def train(faces, labels):
+def train(faces, labels, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
     print("Faces: ", len(faces))
     print("Labels: ", len(labels))
 
-    #LBPH
-    face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-
-
-    #EigenFaces
-    #face_recognizer = cv2.face.EigenFaceRecognizer_create()
-
-    #FisherFaces
-    #face_recognizer = cv2.face.createFisherFaceRecognizer()
+    if algorithm == 1:
+        #LBPH
+        face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+    elif algorithm == 2:
+        #EigenFaces
+        face_recognizer = cv2.face.EigenFaceRecognizer_create()
+    else:
+        #FisherFaces
+        face_recognizer = cv2.face.createFisherFaceRecognizer()
 
     face_recognizer.train(faces, np.array(labels)) #cv2 face recognizer expects numpy array
+    create_label_dictionary('./detections', './models')
 
     return face_recognizer
 

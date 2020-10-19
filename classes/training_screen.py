@@ -96,7 +96,7 @@ class TrainingScreen(Screen):
 
     def begin_training(self):
         faces, labels = prepare_training_data(self.photos_dir)
-        model = train(faces, labels)
+        model = train(faces, labels, algorithm=1)
         model.write('./models/model')
         self.ids.result_text.text = 'Done. Model saved.'
         self.ids.result_text.opacity = 1

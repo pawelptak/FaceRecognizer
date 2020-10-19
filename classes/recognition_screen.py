@@ -84,7 +84,7 @@ class RecognitionScreen(Screen):
         self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            model = load_model_file('./models/model')
+            model = load_model_file('./models/model', algorithm=1)
             face_detector = load_face_detector()
             shape_predictor = load_shape_predictor()
             for file_name in file_names:
