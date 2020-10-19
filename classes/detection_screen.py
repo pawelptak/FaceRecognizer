@@ -18,9 +18,11 @@ class DetectionScreen(Screen):
         if self.ids.name_input.text != '':
             detected = 'Nothing'
             if len(self.file_names) > 0:
+                face_detector = load_face_detector()
+                shape_predictor = load_shape_predictor()
                 for file_name in self.file_names:
                     print('test', file_name)
-                    detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
+                    detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True, face_det=face_detector, shape_pred=shape_predictor)
             elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'

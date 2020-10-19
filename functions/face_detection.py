@@ -6,18 +6,25 @@ import os
 from imutils import face_utils
 from datetime import datetime
 
-def face_detect_hog(img_path: str):
+def face_detect_hog(img_path: str, face_detector):
     try:
-        print("GPU used:", dlib.DLIB_USE_CUDA)
         img = cv2.imread(img_path)
         grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # converts to greyscale
-        face_detect = dlib.get_frontal_face_detector()
-
-
-        faces = face_detect(grey_img, 1)
+        faces = face_detector(grey_img, 1)
         return faces
     except:
         print('Image load error or no faces detected')
+
+def is_gpu_used():
+    print(dlib.DLIB_USE_CUDA)
+
+def load_face_detector():
+    print('Loading face detector...')
+    return dlib.get_frontal_face_detector()
+
+def load_shape_predictor():
+    print('Loading shape predictor...')
+    return dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min_size: tuple):
     print(scale_factor, min_neighbors, min_size)
@@ -43,7 +50,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
     except:
         print('Image load error or no faces detected')
 
-def align_face(img, d, save_path, name):
+def align_face(img, d, save_path, name, shape_predictor):
     #img = cv2.imread(img_path)
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -72,7 +79,7 @@ def draw_landmarks(img, landmarks):
         y = landmarks.part(i).y
         cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
 
-def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
+def face_detect(image_path, save_path, face_name, draw_points: bool, face_det, shape_pred): #hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
 
     img_name = os.path.basename(image_path)
 
@@ -80,7 +87,7 @@ def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or ha
     #detection = face_detect_haar(img, 1.5, 5, (10,10))
 
     #HOG detection
-    detection = face_detect_hog(image_path)
+    detection = face_detect_hog(image_path, face_det)
 
     num_detected = len(detection)
     if num_detected is not 0:
@@ -93,8 +100,9 @@ def face_detect(image_path, save_path, face_name, draw_points: bool): #hog or ha
         #for (x, y, w, h) in detection:
             #cv2_image = cv2.rectangle(cv2_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
         landmarks = []
+
         for f in detection:
-            landmarks.append(align_face(cv2_image, f, save_path, face_name))
+            landmarks.append(align_face(cv2_image, f, save_path, face_name, shape_pred))
 
         if draw_points:
             for i in landmarks:

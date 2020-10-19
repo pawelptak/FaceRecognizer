@@ -19,9 +19,9 @@ class RecognitionScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
 
-    def detect(self, img_source, model: cv2.face_LBPHFaceRecognizer):
+    def detect(self, img_source, model: cv2.face_LBPHFaceRecognizer, f_detector, s_predictor):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
-        detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
+        detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False, face_det=f_detector, shape_pred=s_predictor)
         #if self.ids.cam_box.play:
          #   print('camera enabled')
           #  file_name = './detections/selfie.png'
@@ -85,8 +85,10 @@ class RecognitionScreen(Screen):
 
         if len(file_names) > 0:
             model = load_model_file('./models/model')
+            face_detector = load_face_detector()
+            shape_predictor = load_shape_predictor()
             for file_name in file_names:
-                self.detect(file_name, model)
+                self.detect(file_name, model, face_detector, shape_predictor)
                 del_all_files(detection_path)  # empty detection directory
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index]) #show first image
 
