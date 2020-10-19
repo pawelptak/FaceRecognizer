@@ -55,7 +55,6 @@ def align_face(img, d, save_path, name, shape_predictor):
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
     landmarks = shape_predictor(img, d)
-    (x, y, w, h) = face_utils.rect_to_bb(d)
     face_chip = dlib.get_face_chip(img, landmarks, size=200)
     face_chip = cv2.cvtColor(face_chip, cv2.COLOR_BGR2GRAY)
 
