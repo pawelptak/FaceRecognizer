@@ -17,11 +17,10 @@ class DetectionScreen(Screen):
         del_all_files(self.detections_path)
         if self.ids.name_input.text != '':
             detected = 'Nothing'
-            if self.ids.face_image.image_loaded:
+            if len(self.file_names) > 0:
                 for file_name in self.file_names:
-                    self.ids.face_image.source = file_name
-                    detected = face_detect(image_path=self.ids.face_image.source, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
-
+                    print('test', file_name)
+                    detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
             elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'
@@ -31,7 +30,7 @@ class DetectionScreen(Screen):
                 detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
             if os.path.isfile(detected[0]):
                 self.ids.face_image.source = detected[0]
-            self.ids.face_image.reload()
+                self.ids.face_image.reload()
             self.ids.result.text = 'Faces detected: ' + str(detected[1])
             self.ids.result.opacity = 1
 
@@ -48,8 +47,8 @@ class DetectionScreen(Screen):
             self.ids.num_loaded_text.opacity = 1
             self.ids.num_loaded_text.text = str(len(file_names)) + ' loaded'
             for file_name in file_names:
-                self.ids.face_image.load_image(file_name)
                 self.file_names.append(file_name)
+            self.ids.face_image.load_image(self.file_names[0])
 
 
     def load_image_source(self):
