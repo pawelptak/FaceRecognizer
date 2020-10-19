@@ -19,7 +19,7 @@ class RecognitionScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
 
-    def detect(self, img_source, model: cv2.face_LBPHFaceRecognizer, f_detector, s_predictor):
+    def detect(self, img_source, model, f_detector, s_predictor):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
         detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False, face_det=f_detector, shape_pred=s_predictor)
         #if self.ids.cam_box.play:

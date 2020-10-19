@@ -50,15 +50,6 @@ def load_model_file(path, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - Fisher
         #FisherFaces
         model = cv2.face.createFisherFaceRecognizer()
 
-    # LBPH
-    model = cv2.face.LBPHFaceRecognizer_create()
-
-    #EigenFaces
-    #face_recognizer = cv2.face.EigenFaceRecognizer_create()
-
-    #FisherFaces
-    #face_recognizer = cv2.face.createFisherFaceRecognizer()
-
     model.read(path)
     print('Model file loaded.')
     return model
