@@ -39,6 +39,20 @@ def prepare_training_data(dir_path):
     return faces, labels
 
 
+def load_model_file(path):
+    # LBPH
+    model = cv2.face.LBPHFaceRecognizer_create()
+
+    #EigenFaces
+    #face_recognizer = cv2.face.EigenFaceRecognizer_create()
+
+    #FisherFaces
+    #face_recognizer = cv2.face.createFisherFaceRecognizer()
+
+    model.read(path)
+    print('Model file loaded.')
+    return model
+
 def train(faces, labels):
     print("Faces: ", len(faces))
     print("Labels: ", len(labels))

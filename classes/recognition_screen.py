@@ -19,30 +19,21 @@ class RecognitionScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
 
-    def detect(self):
-        detected = 'Nothing'
+    def detect(self, img_source, model: cv2.face_LBPHFaceRecognizer):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
-        if self.ids.face_image.image_loaded:
-            detected = face_detect(image_path=self.ids.face_image.source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
-        elif self.ids.cam_box.play:
-            print('camera enabled')
-            file_name = './detections/selfie.png'
-            self.ids.cam_box.export_to_png(file_name)
-            self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
-            self.ids.face_image.load_image(file_name)
-            detected = face_detect(file_name, self.ids.name_input.text)
+        detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name, draw_points=False)
+        #if self.ids.cam_box.play:
+         #   print('camera enabled')
+          #  file_name = './detections/selfie.png'
+           # self.ids.cam_box.export_to_png(file_name)
+            #self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
+            #self.ids.face_image.load_image(file_name)
+            #detected = face_detect(file_name, self.ids.name_input.text)
 
         self.ids.face_image.reload()
         print('detected: ', str(detected[1]), 'saved in:', detection_path)
 
         detection_results = []
-
-        #LBPH
-        model = cv2.face.LBPHFaceRecognizer_create()
-
-        #Eigenfaces
-        #model = cv2.face.EigenFaceRecognizer_create()
-        model.read('./models/model')
 
         for filename in os.listdir(detection_path):
              file_path = os.path.join(detection_path, filename)
@@ -56,8 +47,9 @@ class RecognitionScreen(Screen):
                 cv2_image = cv2.putText(cv2_image, detection_results[i][0], (faces[i].left(), faces[i].top()),
                                          cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 0, 0), 2)
             cv2.imwrite(detected[0], cv2_image)
-            self.ids.face_image.source = detected[0]
             self.recognition_imgs = self.get_recognition_images(self.recognitions_path)
+
+
 
 
     def get_recognition_images(self, dir_path): #returns list of images in given directory with a name starting with 'det'
@@ -92,9 +84,9 @@ class RecognitionScreen(Screen):
         self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
+            model = load_model_file('./models/model')
             for file_name in file_names:
-                self.ids.face_image.load_image(file_name)
-                self.detect()
+                self.detect(file_name, model)
                 del_all_files(detection_path)  # empty detection directory
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index]) #show first image
 
