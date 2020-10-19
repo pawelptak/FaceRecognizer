@@ -8,9 +8,12 @@ from datetime import datetime
 
 def face_detect_hog(img_path: str):
     try:
+        print("GPU used:", dlib.DLIB_USE_CUDA)
         img = cv2.imread(img_path)
         grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # converts to greyscale
         face_detect = dlib.get_frontal_face_detector()
+
+
         faces = face_detect(grey_img, 1)
         return faces
     except:
