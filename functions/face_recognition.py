@@ -48,7 +48,7 @@ def load_model_file(path, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - Fisher
         model = cv2.face.EigenFaceRecognizer_create()
     else:
         #FisherFaces
-        model = cv2.face.createFisherFaceRecognizer()
+        model = cv2.face.FisherFaceRecognizer_create()
 
     model.read(path)
     print('Model file loaded.')
@@ -60,13 +60,16 @@ def train(faces, labels, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherF
 
     if algorithm == 1:
         #LBPH
+        print('LBPH chosen')
         face_recognizer = cv2.face.LBPHFaceRecognizer_create()
     elif algorithm == 2:
         #EigenFaces
+        print('Eigenfaces chosen')
         face_recognizer = cv2.face.EigenFaceRecognizer_create()
     else:
         #FisherFaces
-        face_recognizer = cv2.face.createFisherFaceRecognizer()
+        print('Fisherfaces chosen')
+        face_recognizer = cv2.face.FisherFaceRecognizer_create()
 
     face_recognizer.train(faces, np.array(labels)) #cv2 face recognizer expects numpy array
     create_label_dictionary('./detections', './models')

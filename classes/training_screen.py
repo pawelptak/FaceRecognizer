@@ -94,14 +94,37 @@ class TrainingScreen(Screen):
         self.update_values()
         print('chosen', name)
 
+    def get_checkbox_value(self):
+        if self.ids.lbph_checkbox.active:
+            return  1
+        elif self.ids.eigen_checkbox.active:
+            return 2
+        elif self.ids.fisher_checkbox.active:
+            return 3
+        else:
+            return 0
+
+    def load_checkbox_value(self):
+        algorithm = load_config()
+        if algorithm == 1:
+            self.ids.lbph_checkbox.active = True
+        elif algorithm == 2:
+            self.ids.eigen_checkbox.active = True
+        elif algorithm == 3:
+            self.ids.fisher_checkbox.active = True
+
     def begin_training(self):
-        faces, labels = prepare_training_data(self.photos_dir)
-        model = train(faces, labels, algorithm=1)
-        model.write('./models/model')
-        self.ids.result_text.text = 'Done. Model saved.'
-        self.ids.result_text.opacity = 1
+        algorithm = self.get_checkbox_value()
+        if algorithm != 0:
+            faces, labels = prepare_training_data(self.photos_dir)
+            model = train(faces, labels, algorithm=algorithm)
+            model.write('./models/model')
+            self.ids.result_text.text = 'Done. Model saved.'
+            self.ids.result_text.opacity = 1
+            save_settings(algorithm)
 
     def on_pre_enter(self, *args):
+        self.load_checkbox_value()
         del_all_files('./detections')
         self.update_values()
 

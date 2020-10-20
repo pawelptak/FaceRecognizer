@@ -84,7 +84,7 @@ class RecognitionScreen(Screen):
         self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            model = load_model_file('./models/model', algorithm=1)
+            model = load_model_file('./models/model', algorithm=load_config())
             face_detector = load_face_detector()
             shape_predictor = load_shape_predictor()
             for file_name in file_names:
@@ -120,3 +120,13 @@ class RecognitionScreen(Screen):
                 self.ids.accuracy_text.opacity = 1
                 self.ids.accuracy_text.text = 'Correct: ' + str(self.number_correct) + '/' + str(len(self.recognition_imgs)) + ', Accuracy: ' + str(accuracy)
                 print(str(self.number_correct),'out of', str(len(self.recognition_imgs)),'Accuracy:',str(accuracy))
+
+    def on_pre_enter(self, *args):
+        algorithm = load_config()
+        self.ids.algorithm_text.text = 'Algorithm: '
+        if algorithm == 1:
+            self.ids.algorithm_text.text += 'LBPH'
+        elif algorithm == 2:
+            self.ids.algorithm_text.text += 'Eigenfaces'
+        elif algorithm == 3:
+            self.ids.algorithm_text.text += 'Fisherfaces'

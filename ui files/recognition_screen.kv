@@ -12,6 +12,17 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+        Label:
+            id: algorithm_text
+            size_hint_y: None
+            height: 20
+            color: normal_text_color
+            text_size: self.size
+            halign: 'center'
+            valign: 'top'
+            text: 'Algorithm: None'
+            bold: True
+            opacity: .5
 
         RoundButton:
             id: rec_image_button
