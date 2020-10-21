@@ -24,6 +24,20 @@
             bold: True
             opacity: .5
 
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y:None
+            height:30
+            Label:
+            CustomSwitch:
+                id: camera_switch
+                size_hint_x:None
+                width:40
+                on_release: root.use_webcam()
+            Label:
+
+
+
         RoundButton:
             id: rec_image_button
             #text:'Drop image here'
@@ -35,6 +49,14 @@
                 y: self.parent.y
                 size: self.parent.size
                 opacity: .3 if self.source == './Images/image.png' else 1
+            Camera:
+                id:cam_box
+                x: self.parent.x
+                y: self.parent.y
+                size: self.parent.size
+                opacity:0
+                resolution: (640, 480)
+                play: False
         Label:
             id: accuracy_text
             size_hint_y: None

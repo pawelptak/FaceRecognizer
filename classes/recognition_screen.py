@@ -76,12 +76,19 @@ class RecognitionScreen(Screen):
         del_all_files(self.recognitions_path)  # empty detection directory
         self.results = []
 
-        root = tk.Tk()
-        root.withdraw()
+        file_names = []
+        if self.ids.cam_box.play:
+            file_name = './detections/selfie.png'
+            self.ids.cam_box.export_to_png(file_name)
+            self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
+            file_names.append(file_name)
+        else:
+            root = tk.Tk()
+            root.withdraw()
 
-        file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
+            file_names = filedialog.askopenfilenames(filetypes=[("Image files", ".jpeg .jpg .png .bmp .tiff")])
 
-        self.get_root_window().raise_window()  # set focus on window
+            self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
             model = load_model_file('./models/model', algorithm=load_config())
@@ -130,3 +137,14 @@ class RecognitionScreen(Screen):
             self.ids.algorithm_text.text += 'Eigenfaces'
         elif algorithm == 3:
             self.ids.algorithm_text.text += 'Fisherfaces'
+
+    def use_webcam(self):
+        if self.ids.camera_switch.text == 'OFF':
+            self.ids.cam_box.play = True
+            self.ids.face_image.reset_image()
+            self.ids.cam_box.opacity = 1
+        else:
+            self.ids.cam_box.play = False
+            self.ids.cam_box.opacity = 0
+
+
