@@ -79,7 +79,7 @@ class RecognitionScreen(Screen):
         file_names = []
         if self.ids.cam_box.play:
             file_name = './detections/selfie.png'
-            self.ids.cam_box.export_to_png(file_name)
+            self.ids.cam_box.export_to_png(filename=file_name)
             self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
             file_names.append(file_name)
         else:

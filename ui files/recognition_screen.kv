@@ -37,7 +37,6 @@
             Label:
 
 
-
         RoundButton:
             id: rec_image_button
             #text:'Drop image here'
@@ -50,9 +49,9 @@
                 size: self.parent.size
                 opacity: .3 if self.source == './Images/image.png' else 1
             Camera:
-                id:cam_box
                 x: self.parent.x
                 y: self.parent.y
+                id:cam_box
                 size: self.parent.size
                 opacity:0
                 resolution: (640, 480)
