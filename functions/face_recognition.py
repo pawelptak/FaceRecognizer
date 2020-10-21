@@ -61,15 +61,15 @@ def train(faces, labels, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherF
     if algorithm == 1:
         #LBPH
         print('LBPH chosen')
-        face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+        face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=40, neighbors=8, grid_x=8, grid_y=8, threshold=5000)
     elif algorithm == 2:
         #EigenFaces
         print('Eigenfaces chosen')
-        face_recognizer = cv2.face.EigenFaceRecognizer_create()
+        face_recognizer = cv2.face.EigenFaceRecognizer_create(num_components=80)
     else:
         #FisherFaces
         print('Fisherfaces chosen')
-        face_recognizer = cv2.face.FisherFaceRecognizer_create()
+        face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
     face_recognizer.train(faces, np.array(labels)) #cv2 face recognizer expects numpy array
     create_label_dictionary('./detections', './models')
@@ -80,7 +80,7 @@ def recognize(img, recognizer, label_dictionary):
     #put face detection function
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     label = recognizer.predict(img) #returns label and confidence (distance) - the longer the distance the less accuracy
-
+    print('ALL', recognizer.getLabelInfo(label[0]))
     print(label_dictionary[label[0]], label[1])
     return label_dictionary[label[0]], label[1]
 
