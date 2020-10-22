@@ -17,7 +17,8 @@ test_path = '../validation_set'
 # re-size all the images to this
 IMAGE_SIZE = [200, 200]
 
-def get_class_number(dir_path): #returns number of subdirs in given directory
+
+def get_class_number(dir_path):  # returns number of subdirs in given directory
     i = 0
     if os.path.isdir(dir_path):
         for _ in os.listdir(dir_path):
@@ -32,7 +33,7 @@ def split_dataset(dir_path, valid_percentage: int, dest_path):
         file_list = os.listdir(dir_path)
         num_files = len(file_list)
         last_test_index = int(valid_percentage * 0.01 * num_files)
-        print(last_test_index)
+        print('From', num_files, 'in', dir_name, last_test_index, '(' + str(valid_percentage) + '%)', 'for validation')
         for i in range(num_files):
             file_path = os.path.join(dir_path, file_list[i])
             if i < last_test_index:
@@ -49,11 +50,9 @@ def split_dataset(dir_path, valid_percentage: int, dest_path):
                 copyfile(file_path, destination_path)
 
 
-
-
-
-def train(train_path, image_size: list, epochs: int, valid_percentage: int, datasets_dir_path, model_path): #valid_percentage = what percentage of train dataset files is used for validation
-    #clean datasets directory
+def train(train_path, image_size: list, epochs: int, valid_percentage: int, datasets_dir_path,
+          model_path):  # valid_percentage = what percentage of train dataset files is used for validation
+    # clean datasets directory
     del_everything(datasets_dir_path)
 
     # add preprocessing layer to the front of VGG
@@ -111,40 +110,41 @@ def train(train_path, image_size: list, epochs: int, valid_percentage: int, data
 
     # fit the model
     r = model.fit(
-      training_set,
-      validation_data=test_set,
-      epochs=epochs,
-      steps_per_epoch=len(training_set),
-      validation_steps=len(test_set),
-      callbacks = [H, EarlyStopping(monitor='val_loss', patience=20, mode='auto', restore_best_weights=True)]
+        training_set,
+        validation_data=test_set,
+        epochs=epochs,
+        steps_per_epoch=len(training_set),
+        validation_steps=len(test_set),
+        callbacks=[H, EarlyStopping(monitor='val_loss', patience=20, mode='auto', restore_best_weights=True)]
     )
     # loss
-    #plt.plot(H.history['loss'], label='train loss')
-    #plt.plot(H.history['val_loss'], label='val loss')
-    #plt.legend()
-    #plt.show()
-    #plt.savefig('LossVal_loss')
+    # plt.plot(H.history['loss'], label='train loss')
+    # plt.plot(H.history['val_loss'], label='val loss')
+    # plt.legend()
+    # plt.show()
+    # plt.savefig('LossVal_loss')
 
     # accuracies
-    #plt.plot(H.history['accuracy'], label='train acc')
-    #plt.plot(H.history['val_accuracy'], label='val acc')
-    #plt.legend()
-    #plt.show()
-    #plt.savefig('AccVal_acc')
+    # plt.plot(H.history['accuracy'], label='train acc')
+    # plt.plot(H.history['val_accuracy'], label='val acc')
+    # plt.legend()
+    # plt.show()
+    # plt.savefig('AccVal_acc')
 
     model.save(model_path)
 
+
 def get_results(img_path, dictionary, model):
     img = cv2.imread(img_path)
-    cv2.imshow('',img)
+    cv2.imshow('', img)
     cv2.waitKey(0)
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
     results = model.predict(img_array)
     label = -1
-    print('results',results[0])
+    print('results', results[0])
     print('dic', dictionary)
-    return dictionary[get_maximum_index(results[0])+1]
+    return dictionary[get_maximum_index(results[0]) + 1]
 
 
 def get_maximum_index(arr: list):
@@ -156,8 +156,9 @@ def get_maximum_index(arr: list):
             index = i
     return index
 
-if __name__ == '__main__':
-    #train(train_path=train_path, image_size=IMAGE_SIZE, epochs=5, valid_percentage=10, datasets_dir_path='../deep_learning_datasets/', model_path='../models/dnn_model.h5')
-    loaded_model = load_model('../models/dnn_model.h5')
-    print(get_results('../validation_set/justyna/justyna_val_22102020_153659.jpg', load_label_dictionary('../models/'), loaded_model))
 
+if __name__ == '__main__':
+    # train(train_path=train_path, image_size=IMAGE_SIZE, epochs=5, valid_percentage=10, datasets_dir_path='../deep_learning_datasets/', model_path='../models/dnn_model.h5')
+    loaded_model = load_model('../models/dnn_model.h5')
+    print(get_results('../validation_set/justyna/justyna_val_22102020_153659.jpg', load_label_dictionary('../models/'),
+                      loaded_model))

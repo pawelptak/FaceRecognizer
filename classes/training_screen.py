@@ -9,6 +9,8 @@ from functions.cnn_face_recogniton import *
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
+    deep_learning_dir = './deep_learning_datasets/'
+    deep_learning_model_path = './models/dnn_model.h5'
     dir_name = 'None' #chosen directory
     num_files = '0'
     img_preview = ''
@@ -102,7 +104,7 @@ class TrainingScreen(Screen):
             return 2
         elif self.ids.fisher_checkbox.active:
             return 3
-        elif self.ids.ccn_checkbox.active:
+        elif self.ids.cnn_checkbox.active:
             return 4
         else:
             return 0
@@ -116,16 +118,17 @@ class TrainingScreen(Screen):
         elif algorithm == 3:
             self.ids.fisher_checkbox.active = True
         elif algorithm == 4:
-            self.ids.cnn_chechbox.active = True
+            self.ids.cnn_checkbox.active = True
 
     def begin_training(self):
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             if algorithm == 4:
-                train()
-            faces, labels = prepare_training_data(self.photos_dir)
-            model = train(faces, labels, algorithm=algorithm)
-            model.write('./models/model')
+                train(train_path=self.photos_dir, image_size=[200,200], epochs=1, valid_percentage=10, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
+            else:
+                faces, labels = prepare_training_data(self.photos_dir)
+                model = train(faces, labels, algorithm=algorithm)
+                model.write('./models/model')
             self.ids.result_text.text = 'Done. Model saved.'
             self.ids.result_text.opacity = 1
             save_settings(algorithm)
