@@ -18,8 +18,7 @@ Cmake,\
 MicrosoftVisualStudio with C++ libraries
 
 for GPU support: \
-CUDA 10.1,
-
+CUDA 10.1,\
 cuDNN: \
 Copy [installpath]\cuda\bin\cudnn64_[version].dll to C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v[version]\bin.\
 Copy [installpath]\cuda\include\cudnn.h to C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v[version]\include.\
