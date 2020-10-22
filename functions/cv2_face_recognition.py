@@ -80,7 +80,6 @@ def recognize(img, recognizer, label_dictionary):
     #put face detection function
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     label = recognizer.predict(img) #returns label and confidence (distance) - the longer the distance the less accuracy
-    print('ALL', recognizer.getLabelInfo(label[0]))
     print(label_dictionary[label[0]], label[1])
     return label_dictionary[label[0]], label[1]
 

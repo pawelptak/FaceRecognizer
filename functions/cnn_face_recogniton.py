@@ -50,7 +50,7 @@ def split_dataset(dir_path, valid_percentage: int, dest_path):
                 copyfile(file_path, destination_path)
 
 
-def train(train_path, image_size: list, epochs: int, valid_percentage: int, datasets_dir_path,
+def cnn_train(train_path, image_size: list, epochs: int, valid_percentage: int, datasets_dir_path,
           model_path):  # valid_percentage = what percentage of train dataset files is used for validation
     # clean datasets directory
     del_everything(datasets_dir_path)
@@ -136,15 +136,13 @@ def train(train_path, image_size: list, epochs: int, valid_percentage: int, data
 
 def get_results(img_path, dictionary, model):
     img = cv2.imread(img_path)
-    cv2.imshow('', img)
-    cv2.waitKey(0)
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
     results = model.predict(img_array)
     label = -1
     print('results', results[0])
-    print('dic', dictionary)
-    return dictionary[get_maximum_index(results[0]) + 1]
+    #print('dic', dictionary)
+    return dictionary[get_maximum_index(results[0]) + 1], results[0]
 
 
 def get_maximum_index(arr: list):

@@ -4,7 +4,9 @@ import tkinter as tk
 from tkinter import filedialog
 from functions.face_detection import *
 from functions.cv2_face_recognition import *
+from functions.cnn_face_recogniton import get_results
 from functions.empty_dir import *
+from keras.models import load_model
 
 class RecognitionScreen(Screen):
     image_source = ''
@@ -15,6 +17,7 @@ class RecognitionScreen(Screen):
     selected_index = 0
     number_correct = 0
     number_incorrect = 0
+    algorithm = 0
 
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -34,10 +37,14 @@ class RecognitionScreen(Screen):
         print('detected: ', str(detected[1]), 'saved in:', detection_path)
 
         detection_results = []
+        label_dictionary = load_label_dictionary('./models')
 
         for filename in os.listdir(detection_path):
-             file_path = os.path.join(detection_path, filename)
-             detection_results.append(recognize(file_path, model, load_label_dictionary('./models')))
+            file_path = os.path.join(detection_path, filename)
+            if self.algorithm == 4:
+               detection_results.append(get_results(file_path, label_dictionary, model))
+            else:
+                detection_results.append(recognize(file_path, model, label_dictionary))
         print(detection_results)
 
         if os.path.isfile(detected[0]):
@@ -91,7 +98,10 @@ class RecognitionScreen(Screen):
             self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            model = load_model_file('./models/model', algorithm=load_config())
+            if self.algorithm == 4:
+                model = load_model('./models/dnn_model.h5')
+            else:
+                model = load_model_file('./models/model', algorithm=self.algorithm)
             face_detector = load_face_detector()
             shape_predictor = load_shape_predictor()
             for file_name in file_names:
@@ -130,6 +140,7 @@ class RecognitionScreen(Screen):
 
     def on_pre_enter(self, *args):
         algorithm = load_config()
+        self.algorithm = algorithm
         self.ids.algorithm_text.text = 'Algorithm: '
         if algorithm == 1:
             self.ids.algorithm_text.text += 'LBPH'
@@ -137,6 +148,8 @@ class RecognitionScreen(Screen):
             self.ids.algorithm_text.text += 'Eigenfaces'
         elif algorithm == 3:
             self.ids.algorithm_text.text += 'Fisherfaces'
+        elif algorithm == 4:
+            self.ids.algorithm_text.text += 'DNN'
 
     def use_webcam(self):
         if self.ids.camera_switch.text == 'OFF':
