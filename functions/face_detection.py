@@ -57,7 +57,7 @@ def align_face(img, d, save_path, name, shape_predictor):
     landmarks = shape_predictor(img, d)
     face_chip = dlib.get_face_chip(img, landmarks, size=200)
     face_chip = cv2.normalize(face_chip, None, 0, 255, cv2.NORM_MINMAX) #image nomralization
-    face_chip = cv2.cvtColor(face_chip, cv2.COLOR_BGR2GRAY) #converting to gretscale
+    face_chip = cv2.cvtColor(face_chip, cv2.COLOR_BGR2GRAY) #converting to greyscale
 
     now = datetime.now()
     dt_string = now.strftime("%d%m%Y_%H%M%S")
