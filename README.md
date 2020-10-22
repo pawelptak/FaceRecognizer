@@ -9,8 +9,10 @@ opencv-python,\
 opencv-contrib-python,\
 numpy,\
 kivy (kivy-sdl2, kivy-glew),\
-tensorflow,\
+keras,\
 scikit-learn,\
+shutil,\
+os,\
 dlib
 
 Dlib requires:\
