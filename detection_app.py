@@ -18,6 +18,7 @@ from classes.face_image import FaceImage
 from classes.screen_stack import ScreenStack
 from functions.empty_dir import *
 
+# loading ui files
 Builder.load_file("ui files/widget_styles.kv")
 Builder.load_file("ui files/navigation_ui.kv")
 Builder.load_file("ui files/detection_screen.kv")
@@ -39,10 +40,7 @@ class WindowManager(ScreenManager):
 
 #main app class
 class FaceRecognizer(App):
-    # loading ui files
-
     icon = 'Images/icon.png'
-
     Window.minimum_width, Window.minimum_height = (800,600)
 
     def build(self):

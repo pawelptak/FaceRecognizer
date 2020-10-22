@@ -3,7 +3,7 @@ from functions.configuration import *
 import tkinter as tk
 from tkinter import filedialog
 from functions.face_detection import *
-from functions.face_recognition import *
+from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 
 class RecognitionScreen(Screen):

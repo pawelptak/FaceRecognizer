@@ -3,8 +3,9 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from functions.configuration import *
-from functions.face_recognition import *
+from functions.cv2_face_recognition import *
 from functions.empty_dir import *
+from functions.cnn_face_recogniton import *
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
@@ -96,11 +97,13 @@ class TrainingScreen(Screen):
 
     def get_checkbox_value(self):
         if self.ids.lbph_checkbox.active:
-            return  1
+            return 1
         elif self.ids.eigen_checkbox.active:
             return 2
         elif self.ids.fisher_checkbox.active:
             return 3
+        elif self.ids.ccn_checkbox.active:
+            return 4
         else:
             return 0
 
@@ -112,10 +115,14 @@ class TrainingScreen(Screen):
             self.ids.eigen_checkbox.active = True
         elif algorithm == 3:
             self.ids.fisher_checkbox.active = True
+        elif algorithm == 4:
+            self.ids.cnn_chechbox.active = True
 
     def begin_training(self):
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
+            if algorithm == 4:
+                train()
             faces, labels = prepare_training_data(self.photos_dir)
             model = train(faces, labels, algorithm=algorithm)
             model.write('./models/model')

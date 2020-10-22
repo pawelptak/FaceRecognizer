@@ -144,6 +144,22 @@
                     text_size: self.size
                     size_hint_x:None
                 Label:
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                CustomCheckbox:
+                    id: cnn_checkbox
+                    group: 'modes'
+                    size_hint_x:None
+                    width: 40
+                Label:
+                    color: normal_text_color
+                    halign: 'left'
+                    valign: 'center'
+                    text:'Deep Learning'
+                    text_size: self.size
+                    size_hint_x:None
+                Label:
             Label:
 
         BoxLayout:

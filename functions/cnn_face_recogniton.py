@@ -1,17 +1,15 @@
-from keras.layers import Input, Lambda, Dense, Flatten
 from keras.layers.core import Flatten, Dense, Dropout
-from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
 from keras.models import Model, Sequential
 import os
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from keras.applications.vgg16 import VGG16
-from keras.applications.vgg16 import preprocess_input
 from keras.callbacks import EarlyStopping, History, Callback
+from functions.cv2_face_recognition import load_label_dictionary
 from keras.models import load_model
-from PIL import Image
-from functions.face_recognition import load_label_dictionary
+from shutil import copyfile
+from functions.empty_dir import del_everything
 
 train_path = '../detections'
 test_path = '../validation_set'
@@ -19,53 +17,47 @@ test_path = '../validation_set'
 # re-size all the images to this
 IMAGE_SIZE = [200, 200]
 
-
-
-
-def prepare_dnn_data(dir_path):
-    dirs = os.listdir(dir_path)
-
-    X, y = list(), list()
-    label = 1
-    for dir_name in dirs:
-        path = os.path.join(dir_path, dir_name)
-        if os.path.isdir(path):
-            images = os.listdir(path)
-            for image in images:
-                img = cv2.imread(os.path.join(path, image))
-                img = cv2.resize(img, (160,160))
-                X.append(img)
-                y.append(label)
-            label += 1
-    return np.asarray(X), np.asarray(y)
-
-
-
-def get_embedding(model, face):
-    # scale pixel values
-    face_pixels = face.astype('float32')
-    # standardization
-    mean, std = face_pixels.mean(), face_pixels.std()
-    face = (face-face_pixels - mean)/std
-    # transfer face into one sample (3 dimension to 4 dimension)
-    sample = np.expand_dims(face, axis=0)
-    # make prediction to get embedding
-    yhat = model.predict(sample)
-    return yhat[0]
-
-
 def get_class_number(dir_path): #returns number of subdirs in given directory
     i = 0
     if os.path.isdir(dir_path):
-        for file_name in os.listdir(dir_path):
+        for _ in os.listdir(dir_path):
             i += 1
     return i
 
 
+def split_dataset(dir_path, valid_percentage: int, dest_path):
+    dir_name = os.path.basename(dir_path)
+    if os.path.isdir(dir_path):
+        i = 0
+        file_list = os.listdir(dir_path)
+        num_files = len(file_list)
+        last_test_index = int(valid_percentage * 0.01 * num_files)
+        print(last_test_index)
+        for i in range(num_files):
+            file_path = os.path.join(dir_path, file_list[i])
+            if i < last_test_index:
+                destination_dir = os.path.join(dest_path, 'test', dir_name)
+                if not os.path.exists(destination_dir):
+                    os.makedirs(destination_dir)
+                destination_path = os.path.join(destination_dir, file_list[i])
+                copyfile(file_path, destination_path)
+            else:
+                destination_dir = os.path.join(dest_path, 'train', dir_name)
+                if not os.path.exists(destination_dir):
+                    os.makedirs(destination_dir)
+                destination_path = os.path.join(destination_dir, file_list[i])
+                copyfile(file_path, destination_path)
 
-def train():
+
+
+
+
+def train(train_path, image_size: list, epochs: int, valid_percentage: int, datasets_dir_path, model_path): #valid_percentage = what percentage of train dataset files is used for validation
+    #clean datasets directory
+    del_everything(datasets_dir_path)
+
     # add preprocessing layer to the front of VGG
-    vgg = VGG16(input_shape=IMAGE_SIZE + [3], weights='imagenet', include_top=False)
+    vgg = VGG16(input_shape=image_size + [3], weights='imagenet', include_top=False)
 
     # don't train existing weights
     for layer in vgg.layers:
@@ -74,7 +66,7 @@ def train():
     # our layers - you can add more if you want
     x = Flatten()(vgg.output)
     # x = Dense(1000, activation='relu')(x)
-    prediction = Dense(get_class_number(test_path), activation='softmax')(x)
+    prediction = Dense(get_class_number(train_path), activation='softmax')(x)
 
     # create a model object
     model = Model(inputs=vgg.input, outputs=prediction)
@@ -89,6 +81,13 @@ def train():
         metrics=['accuracy']
     )
 
+    for dir_name in os.listdir(train_path):
+        dir_path = os.path.join(train_path, dir_name)
+        if os.path.isdir(dir_path):
+            split_dataset(dir_path, valid_percentage, datasets_dir_path)
+
+    train_set = os.path.join(datasets_dir_path, 'train')
+    test_set = os.path.join(datasets_dir_path, 'test')
 
     from keras.preprocessing.image import ImageDataGenerator
     train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -98,13 +97,13 @@ def train():
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-    training_set = train_datagen.flow_from_directory(train_path,
-                                                     target_size=(IMAGE_SIZE[0], IMAGE_SIZE[1]),
+    training_set = train_datagen.flow_from_directory(train_set,
+                                                     target_size=(image_size[0], image_size[1]),
                                                      batch_size=32,
                                                      class_mode='categorical')
 
-    test_set = test_datagen.flow_from_directory(test_path,
-                                                target_size=(IMAGE_SIZE[0], IMAGE_SIZE[1]),
+    test_set = test_datagen.flow_from_directory(test_set,
+                                                target_size=(image_size[0], image_size[1]),
                                                 batch_size=32,
                                                 class_mode='categorical')
 
@@ -114,10 +113,10 @@ def train():
     r = model.fit(
       training_set,
       validation_data=test_set,
-      epochs=1,
+      epochs=epochs,
       steps_per_epoch=len(training_set),
       validation_steps=len(test_set),
-      callbacks = [H, EarlyStopping(monitor='val_loss', mode='auto', restore_best_weights=True)]
+      callbacks = [H, EarlyStopping(monitor='val_loss', patience=20, mode='auto', restore_best_weights=True)]
     )
     # loss
     #plt.plot(H.history['loss'], label='train loss')
@@ -133,24 +132,32 @@ def train():
     #plt.show()
     #plt.savefig('AccVal_acc')
 
-    model.save('my_model.h5')
+    model.save(model_path)
 
-def get_results(img_path, dictionary):
+def get_results(img_path, dictionary, model):
     img = cv2.imread(img_path)
     cv2.imshow('',img)
     cv2.waitKey(0)
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
-    results = loaded_model.predict(img_array)
+    results = model.predict(img_array)
     label = -1
     print('results',results[0])
-    for i in range(len(results[0])):
-        if results[0][i] > 0.5:
-            label = i + 1
-            return dictionary[label]
-    return 'No recognition'
+    print('dic', dictionary)
+    return dictionary[get_maximum_index(results[0])+1]
 
+
+def get_maximum_index(arr: list):
+    index = 0
+    max = 0
+    for i in range(len(arr)):
+        if arr[i] > max:
+            max = arr[i]
+            index = i
+    return index
 
 if __name__ == '__main__':
-    loaded_model = load_model('my_model.h5')
-    print(get_results('../validation_set/pawel/pawel_val_22102020_153821.jpg', load_label_dictionary('../models/')))
+    #train(train_path=train_path, image_size=IMAGE_SIZE, epochs=5, valid_percentage=10, datasets_dir_path='../deep_learning_datasets/', model_path='../models/dnn_model.h5')
+    loaded_model = load_model('../models/dnn_model.h5')
+    print(get_results('../validation_set/justyna/justyna_val_22102020_153659.jpg', load_label_dictionary('../models/'), loaded_model))
+
