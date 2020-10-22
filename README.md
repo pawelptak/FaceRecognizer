@@ -10,7 +10,7 @@ opencv-contrib-python,\
 numpy,\
 kivy (kivy-sdl2, kivy-glew),\
 tensorflow,\
-mtcnn,\
+scikit-learn,\
 dlib
 
 Dlib requires:\
