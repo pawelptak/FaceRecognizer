@@ -17,7 +17,7 @@ Dlib requires:\
 Cmake,\
 MicrosoftVisualStudio with C++ libraries
 
-for GPU support:
+for GPU support: \
 CUDA 10.1,
 
 cuDNN: \
