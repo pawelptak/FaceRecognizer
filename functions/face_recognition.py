@@ -61,7 +61,7 @@ def train(faces, labels, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherF
     if algorithm == 1:
         #LBPH
         print('LBPH chosen')
-        face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=40, neighbors=8, grid_x=8, grid_y=8, threshold=5000)
+        face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=30, neighbors=8, grid_x=8, grid_y=8, threshold=5000)
     elif algorithm == 2:
         #EigenFaces
         print('Eigenfaces chosen')

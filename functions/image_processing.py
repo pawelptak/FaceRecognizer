@@ -1,0 +1,17 @@
+import os
+import cv2
+
+def normalize_images(dir_path): #normalizes all images in given directory
+    if os.path.isdir(dir_path):
+        for file_name in os.listdir(dir_path):
+            file_path = os.path.join(dir_path, file_name)
+            if file_name.endswith('jpg') or file_name.endswith('png'):
+                print(file_name)
+                img = cv2.imread(file_path)
+                img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)
+                cv2.imwrite(file_path, img)
+    print('Images normalized')
+
+
+if __name__ == '__main__':
+    normalize_images('../detections/pawel')
