@@ -10,18 +10,21 @@ class DetectionScreen(Screen):
     image_source = ''
     file_names = []
     detections_path = './detections/'
+    number_detected = 0
     def __init__(self, **kw):
         super().__init__(**kw)
 
     def detect(self):
         del_all_files(self.detections_path)
         if self.ids.name_input.text != '':
+            self.number_detected = 0
             detected = 'Nothing'
             if len(self.file_names) > 0:
                 face_detector = load_face_detector()
                 shape_predictor = load_shape_predictor()
                 for file_name in self.file_names:
                     detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True, face_det=face_detector, shape_pred=shape_predictor)
+                    self.number_detected += detected[1]
             elif self.ids.cam_box.play:
                 print('camera enabled')
                 file_name = './detections/selfie.png'
@@ -32,7 +35,7 @@ class DetectionScreen(Screen):
             if os.path.isfile(detected[0]):
                 self.ids.face_image.source = detected[0]
                 self.ids.face_image.reload()
-            self.ids.result.text = 'Faces detected: ' + str(detected[1])
+            self.ids.result.text = 'Faces detected: ' + str(self.number_detected)
             self.ids.result.opacity = 1
 
 
@@ -46,7 +49,7 @@ class DetectionScreen(Screen):
 
         if len(file_names) > 0:
             self.ids.num_loaded_text.opacity = 1
-            self.ids.num_loaded_text.text = str(len(file_names)) + ' loaded'
+            self.ids.num_loaded_text.text = str(len(file_names)) + ' images loaded'
             for file_name in file_names:
                 self.file_names.append(file_name)
             self.ids.face_image.load_image(self.file_names[0])

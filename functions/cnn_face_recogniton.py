@@ -1,7 +1,7 @@
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.models import Model, Sequential
 import os
-import numpy as np
+from numpy import asarray
 import cv2
 import matplotlib.pyplot as plt
 from keras.applications.vgg16 import VGG16
@@ -10,6 +10,7 @@ from functions.cv2_face_recognition import load_label_dictionary
 from keras.models import load_model
 from shutil import copyfile
 from functions.empty_dir import del_everything
+import numpy as np
 
 train_path = '../detections'
 test_path = '../validation_set'
@@ -25,6 +26,27 @@ def get_class_number(dir_path):  # returns number of subdirs in given directory
             i += 1
     return i
 
+
+
+def load_dataset(directory):
+    X, y = list(), list()
+    # enumerate folders, on per class
+    for subdir in os.listdir(directory):
+        # path
+        path = directory + subdir + '/'
+        # skip any files that might be in the dir
+        if not isdir(path):
+            continue
+        # load all faces in the subdirectory
+        faces = load_faces(path)
+        # create labels
+        labels = [subdir for _ in range(len(faces))]
+        # summarize progress
+        print('>loaded %d examples for class: %s' % (len(faces), subdir))
+        # store
+        X.extend(faces)
+        y.extend(labels)
+    return asarray(X), asarray(y)
 
 def split_dataset(dir_path, valid_percentage: int, dest_path):
     dir_name = os.path.basename(dir_path)
@@ -115,7 +137,7 @@ def cnn_train(train_path, image_size: list, epochs: int, valid_percentage: int, 
         epochs=epochs,
         steps_per_epoch=len(training_set),
         validation_steps=len(test_set),
-        callbacks=[H, EarlyStopping(monitor='val_loss', patience=20, mode='auto', restore_best_weights=True)]
+        callbacks=[H, EarlyStopping(monitor='val_loss', patience=3, mode='auto', restore_best_weights=True)]
     )
     # loss
     # plt.plot(H.history['loss'], label='train loss')
@@ -156,7 +178,4 @@ def get_maximum_index(arr: list):
 
 
 if __name__ == '__main__':
-    # train(train_path=train_path, image_size=IMAGE_SIZE, epochs=5, valid_percentage=10, datasets_dir_path='../deep_learning_datasets/', model_path='../models/dnn_model.h5')
-    loaded_model = load_model('../models/dnn_model.h5')
-    print(get_results('../validation_set/justyna/justyna_val_22102020_153659.jpg', load_label_dictionary('../models/'),
-                      loaded_model))
+    model = load_model('../models/dnn_model.h5')

@@ -26,6 +26,6 @@ def resize_images(dir_path, x, y): #resizes all images in given directory to giv
     print('Images resized')
 
 if __name__ == '__main__':
-    resize_images('../validation_set/pawel', 200, 200)
-    resize_images('../validation_set/dorota', 200, 200)
-    resize_images('../validation_set/justyna', 200, 200)
+    resize_images('../detections/pawel', 224, 224)
+    resize_images('../detections/dorota', 224, 224)
+    resize_images('../detections/justyna', 224, 244)

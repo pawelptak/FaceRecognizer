@@ -121,10 +121,11 @@ class TrainingScreen(Screen):
             self.ids.cnn_checkbox.active = True
 
     def begin_training(self):
+        self.ids.result_text.opacity = 0
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             if algorithm == 4:
-                cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=1, valid_percentage=10, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
+                cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
             else:
                 faces, labels = prepare_training_data(self.photos_dir)
                 model = train(faces, labels, algorithm=algorithm)
