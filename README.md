@@ -13,6 +13,8 @@ keras,\
 scikit-learn,\
 shutil,\
 os,\
+sklearn,\
+pickle,\
 dlib
 
 Dlib requires:\
