@@ -53,7 +53,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
 def align_face(img, d, save_path, name, shape_predictor):
     #img = cv2.imread(img_path)
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    shape_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+    shape_predictor = shape_predictor
     landmarks = shape_predictor(img, d)
     face_chip = dlib.get_face_chip(img, landmarks, size=200)
     face_chip = cv2.normalize(face_chip, None, 0, 255, cv2.NORM_MINMAX) #image nomralization
