@@ -4,7 +4,7 @@ Application features:
 - train a face recognition model, using machine learning
 - 4 face recognition algorithms: LBPH, Eigenfaces, Fisherfaces, Deep Learning
 - testing created face recognition system
-
+test
 ## Requirements: 
 ```sh
 Python 3.7
