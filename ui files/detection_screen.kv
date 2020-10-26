@@ -27,26 +27,39 @@
                 orientation:'vertical'
                 Label:
                 BoxLayout:
+                    size_hint_y:None
+                    height: 35
+                    id: txt_input_container
                     orientation: 'horizontal'
                     Label:
-                    CustomInput:
-                        id: name_input
-                        hint_text: 'Name'
-                        input_type: 'text'
-                        multiline: False
+                        size_hint_x: .5
+                    BoxLayout:
                         size_hint_y:None
-                        height: 30
-                        size_hint_x:2.5
+                        height:txt_input_container.height
+                        canvas.before:
+                            Color:
+                                rgba: workspace_bck_color
+                            Rectangle:
+                                pos:self.pos
+                                size:self.size
+                        CustomInput:
+                            id: name_input
+                            hint_text: 'Name'
+                            input_type: 'text'
+                            multiline: False
+                            size_hint_x:2.5
                     Label:
+                        size_hint_x: .5
+                Label:
+                    size_hint_y:None
+                    height: 20
                 BoxLayout:
                     orientation: 'horizontal'
-                    size_hint_y:None
-
+                    size_hint_y: .2
                     Label:
                     RoundButton:
                         id: detect_button
                         text: 'Detect'
-                        size_hint_y: .4
                         on_release: root.detect()
                     Label:
                 Label:

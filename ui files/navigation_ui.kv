@@ -65,32 +65,6 @@
                 size_hint_x:1.5
 
 
-            #Settings mode button
-            CustButton:
-                id:settings_mode_button
-                size_hint_x: None
-                width:40
-                on_release:
-                    #root.manager.current = "settings"
-                    root.manager.transition.direction = "left"
-                    root.manager.stack.add_screen(root.manager.current)
-                Image:
-                    source: './Images/setts.png'
-                    center: self.parent.center
-                    height: self.parent.height - 12
-                    allow_stretch: True
-                    opacity:1 if root.manager.current=="settings" else .5
-                    mipmap:True
-
-                Label:
-                    opacity:1 if root.manager.current=="settings" else 0
-                    canvas:
-                        Color:
-                            rgba: header_text_color
-                        Line:
-                            width: 1.001
-                            points: (settings_mode_button.x+15,settings_mode_button.y+3,settings_mode_button.x+settings_mode_button.width-15,settings_mode_button.y+3)
-                            cap:'none'
 
 
     #manages changing the screen

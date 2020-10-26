@@ -7,6 +7,7 @@
 #:set area_color (82/255,184/255,111/255,.5)
 #:set red_color (214/255, 0/255, 71/255, 1)
 #:set accent_color (0/255,189/255,155/255,1)
+#:import C kivy.utils.get_color_from_hex
 
 #top naviation bar style
 <TabBar@GridLayout>:
@@ -74,17 +75,44 @@
 #custom text input
 <CustomInput@TextInput>:
     write_tab: False
-    background_normal:'Images/light_grey.jpg'
-    background_disabled_normal:'Images/pressed.jpg'
+    background_color: 0,0,0,0
+    cursor_color: 0,0,0,1
     text_size: self.size
+    font_size: self.height - 19
     valign:'bottom'
-
     canvas.before:
         Color:
-            rgb: normal_text_color if self.text != '' and self.disabled == False else (.6,.6,.6,1)
+            rgba: workspace_bck_color
+
+
+    canvas.after:
+        Color:
+            rgb: workspace_bck_color
+        Ellipse:
+            angle_start:180
+            angle_end:360
+            pos:(self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Ellipse:
+            angle_start:360
+            angle_end:540
+            pos: (self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Color:
+            rgba: 0,0,0,0
         Line:
-            width: 1
-            rectangle: (self.x, self.y, self.width, self.height-2)
+            width: 1.001
+            points: self.pos[0] , self.pos[1], self.pos[0] + self.size[0], self.pos[1]
+        Line:
+            width: 1.001
+            points: self.pos[0], self.pos[1] + self.size[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1]
+        Line:
+            width: 1.001
+            ellipse: self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 180, 360
+        Line:
+            width: 1.001
+            ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
+
 
 <MySpinnerOption@SpinnerOption>: #spinner is a drop down list for choosing models
     background_normal:'./Images/pressed.jpg'
