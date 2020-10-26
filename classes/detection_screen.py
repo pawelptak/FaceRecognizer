@@ -43,6 +43,7 @@ class DetectionScreen(Screen):
 
 
     def open_file_dialog(self):
+        self.selected_index = 0
         self.file_names = []
         root = tk.Tk()
         root.withdraw()

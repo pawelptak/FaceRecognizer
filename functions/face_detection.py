@@ -61,13 +61,10 @@ def align_face(img, d, save_path, name, shape_predictor):
 
     now = datetime.now()
     dt_string = now.strftime("%d%m%Y_%H%M%S")
-
-    #save_path += name + '/'
     save_path = os.path.join(save_path, name)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    #save_path += name + '_' + dt_string+'.jpg'
-    file_name = name + '_' + dt_string+'.jpg'
+    file_name = name + '_' + dt_string+ '_' + str(d.left())+'.jpg'
     save_path = os.path.join(save_path, file_name)
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
@@ -102,6 +99,7 @@ def face_detect(image_path, save_path, face_name, draw_points: bool, face_det, s
         landmarks = []
 
         for f in detection:
+            print('face', f)
             landmarks.append(align_face(cv2_image, f, save_path, face_name, shape_pred))
 
         if draw_points:
