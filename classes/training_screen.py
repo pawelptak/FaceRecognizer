@@ -5,12 +5,13 @@ from tkinter import filedialog
 from functions.configuration import *
 from functions.cv2_face_recognition import *
 from functions.empty_dir import *
-from functions.cnn_face_recogniton import *
+from functions.cnn_face_recognition_v2 import train_model
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
     deep_learning_dir = './deep_learning_datasets/'
     deep_learning_model_path = './models/dnn_model.h5'
+    model_files_path = './models/'
     dir_name = 'None' #chosen directory
     num_files = '0'
     img_preview = ''
@@ -125,11 +126,16 @@ class TrainingScreen(Screen):
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             if algorithm == 4:
-                cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
+                #cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
+                train_model(images_source_path=self.photos_dir,
+                            images_destination_path=self.deep_learning_dir,
+                            facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
+                            model_save_dir=self.model_files_path,
+                            valid_percentage=10)
             else:
                 faces, labels = prepare_training_data(self.photos_dir)
                 model = train(faces, labels, algorithm=algorithm)
-                model.write('./models/model')
+                model.write('./models/cv2_model')
             self.ids.result_text.text = 'Done. Model saved.'
             self.ids.result_text.opacity = 1
             save_settings(algorithm)

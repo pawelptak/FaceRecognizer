@@ -5,7 +5,7 @@
 #:set header_text_color (0/255,102/255,178/255,1)
 #:set ok_text_color (82/255,184/255,111/255,1)
 #:set area_color (82/255,184/255,111/255,.5)
-#:set nok_text_color (210/255,48/255,64/255,1)
+#:set red_color (214/255, 0/255, 71/255, 1)
 #:set accent_color (0/255,189/255,155/255,1)
 
 #top naviation bar style
@@ -65,7 +65,7 @@
 
     canvas.before:
         Color:
-            rgb:(214/255, 0/255, 71/255, 1) if self.state == 'normal' else (153/255, 0/255, 51/255, 1)
+            rgb: red_color if self.state == 'normal' else (153/255, 0/255, 51/255, 1)
         RoundedRectangle:
             size: (self.size)
             pos: (self.pos)
@@ -104,7 +104,7 @@
     disabled_color: normal_text_color
     canvas.before:
         Color:
-            rgb:(.94,.94,.94,1) if self.text == 'OFF' else (.8, .8, .8, 1)
+            rgb:(.94,.94,.94,1) if self.text == 'OFF' else red_color
         RoundedRectangle:
             size: (self.size)
             pos: (self.pos)
