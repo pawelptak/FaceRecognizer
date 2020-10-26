@@ -45,7 +45,8 @@ Copy [installpath]\cuda\include\cudnn.h to C:\Program Files\NVIDIA GPU Computing
 Copy [installpath]\cuda\lib\x64\cudnn.lib to C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v[version]\lib\x64.
 ```
 
-#####Face recognition algorithms based on:
+<br />
+######Face recognition algorithms based on:
 1. OpenCV FaceRecognizer class (<https://docs.opencv.org/3.4/da/d60/tutorial_face_main.html>)
 2. Scikit-learn SVM classifier (<https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>)
 3. Keras FaceNet Pre-Trained Model (<https://github.com/nyoki-mtl/keras-facenet>)
