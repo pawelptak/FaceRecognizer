@@ -1,15 +1,17 @@
 from kivy.uix.button import Button
-from kivy.uix.image import Image
 
 
 class CustButton(Button):
     pass
 
+
 class RoundButton(Button):
     pass
 
+
 class CustomSwitch(Button):
     on = False
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.text = 'OFF'
@@ -21,7 +23,3 @@ class CustomSwitch(Button):
         else:
             self.text = 'OFF'
             self.on = False
-
-
-
-

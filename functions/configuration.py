@@ -18,6 +18,7 @@ def save_settings(value):
         yaml.dump(data, file)
         print('Saved:', data)
 
+
 def clear_image_src():
     data = dict(image_source='')
     with open('config.yaml', 'w') as file:

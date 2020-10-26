@@ -1,5 +1,5 @@
 from kivy.uix.image import Image
-from functions.configuration import *
+
 
 class FaceImage(Image):
     image_loaded = False

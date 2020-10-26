@@ -1,5 +1,4 @@
 from kivy.uix.screenmanager import Screen
-import os
 import tkinter as tk
 from tkinter import filedialog
 from functions.configuration import *
@@ -7,12 +6,13 @@ from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 from functions.cnn_face_recognition_v2 import train_model
 
+
 class TrainingScreen(Screen):
     photos_dir = './detections/'
     deep_learning_dir = './deep_learning_datasets/'
     deep_learning_model_path = './models/dnn_model.h5'
     model_files_path = './models/'
-    dir_name = 'None' #chosen directory
+    dir_name = 'None'  # chosen directory
     num_files = '0'
     img_preview = ''
 
@@ -28,7 +28,6 @@ class TrainingScreen(Screen):
         self.num_files = self.get_file_number(self.dir_name)
         img_source = self.get_img_preview()
         self.img_preview = img_source
-
 
     def get_img_preview(self):
         name = self.dir_name
@@ -54,12 +53,12 @@ class TrainingScreen(Screen):
                 self.dir_name = 'None'
             self.update_values()
 
-    def get_first_image_dir(self, dir_list): #takes a directory list returns first directory with images
+    def get_first_image_dir(self, dir_list):  # takes a directory list returns first directory with images
         for dir in dir_list:
             if self.get_file_number(dir) > 0:
                 return dir
 
-    def update_values(self): #update displayed values
+    def update_values(self):  # update displayed values
         self.ids.current_dir_text.text = self.photos_dir
         values = self.get_values()
         self.ids.directory_spinner.values = values
@@ -83,7 +82,7 @@ class TrainingScreen(Screen):
         dir_name = self.get_dir_names()
         return dir_name
 
-    def get_file_number(self, dir_name): #returns number of jpg files in directory
+    def get_file_number(self, dir_name):  # returns number of jpg files in directory
         n = 0
         path = os.path.join(self.photos_dir, dir_name)
         if os.path.isdir(path):
@@ -126,7 +125,7 @@ class TrainingScreen(Screen):
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             if algorithm == 4:
-                #cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
+                # cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
                 train_model(images_source_path=self.photos_dir,
                             images_destination_path=self.deep_learning_dir,
                             facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
@@ -144,5 +143,3 @@ class TrainingScreen(Screen):
         self.load_checkbox_value()
         del_all_files('./detections')
         self.update_values()
-
-

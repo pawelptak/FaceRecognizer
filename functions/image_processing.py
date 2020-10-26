@@ -1,7 +1,8 @@
 import os
 import cv2
 
-def normalize_images(dir_path): #normalizes all images in given directory
+
+def normalize_images(dir_path):  # normalizes all images in given directory
     if os.path.isdir(dir_path):
         for file_name in os.listdir(dir_path):
             file_path = os.path.join(dir_path, file_name)
@@ -13,8 +14,8 @@ def normalize_images(dir_path): #normalizes all images in given directory
     print('Images normalized')
 
 
-def resize_images(dir_path, x, y): #resizes all images in given directory to given dimensions
-    size = (x,y)
+def resize_images(dir_path, x, y):  # resizes all images in given directory to given dimensions
+    size = (x, y)
     if os.path.isdir(dir_path):
         for file_name in os.listdir(dir_path):
             file_path = os.path.join(dir_path, file_name)
@@ -24,6 +25,7 @@ def resize_images(dir_path, x, y): #resizes all images in given directory to giv
                 img = cv2.resize(img, size)
                 cv2.imwrite(file_path, img)
     print('Images resized')
+
 
 if __name__ == '__main__':
     resize_images('../detections/pawel', 224, 224)

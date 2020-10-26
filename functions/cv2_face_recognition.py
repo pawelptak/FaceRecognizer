@@ -1,9 +1,8 @@
 import os
 import pickle
-
 import cv2
 import numpy as np
-from classes.face_image import FaceImage
+
 
 def create_label_dictionary(dir_path, dictionary_savepath):
     dict = {}
@@ -16,10 +15,12 @@ def create_label_dictionary(dir_path, dictionary_savepath):
     with open(save_path, 'wb') as f:
         pickle.dump(dict, f, pickle.HIGHEST_PROTOCOL)
 
+
 def load_label_dictionary(dictionary_savepath):
     save_path = os.path.join(dictionary_savepath, 'label_dic.pkl')
     with open(save_path, 'rb') as f:
         return pickle.load(f)
+
 
 def prepare_training_data(dir_path):
     dirs = os.listdir(dir_path)
@@ -38,48 +39,51 @@ def prepare_training_data(dir_path):
     return faces, labels
 
 
-def load_model_file(path, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
+def load_model_file(path, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
 
     if algorithm == 1:
-        #LBPH
+        # LBPH
         model = cv2.face.LBPHFaceRecognizer_create()
     elif algorithm == 2:
-        #EigenFaces
+        # EigenFaces
         model = cv2.face.EigenFaceRecognizer_create()
     else:
-        #FisherFaces
+        # FisherFaces
         model = cv2.face.FisherFaceRecognizer_create()
 
     model.read(path)
     print('Model file loaded.')
     return model
 
-def train(faces, labels, algorithm: int): #1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
+
+def train(faces, labels, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
     print("Faces: ", len(faces))
     print("Labels: ", len(labels))
 
     if algorithm == 1:
-        #LBPH
+        # LBPH
         print('LBPH chosen')
         face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=30, neighbors=8, grid_x=8, grid_y=8, threshold=5000)
     elif algorithm == 2:
-        #EigenFaces
+        # EigenFaces
         print('Eigenfaces chosen')
         face_recognizer = cv2.face.EigenFaceRecognizer_create(num_components=80)
     else:
-        #FisherFaces
+        # FisherFaces
         print('Fisherfaces chosen')
         face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
-    face_recognizer.train(faces, np.array(labels)) #cv2 face recognizer expects numpy array
+    face_recognizer.train(faces, np.array(labels))  # cv2 face recognizer expects numpy array
     create_label_dictionary('./detections', './models')
 
     return face_recognizer
 
+
 def recognize(img, recognizer, label_dictionary):
-    #put face detection function
+    # put face detection function
     img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
-    label = recognizer.predict(img) #returns label and confidence (distance) - the longer the distance the less accuracy
+    label = recognizer.predict(
+        img)  # returns label and confidence (distance) - the longer the distance the less accuracy
     print(label_dictionary[label[0]], label[1])
     return label_dictionary[label[0]], label[1]
 
