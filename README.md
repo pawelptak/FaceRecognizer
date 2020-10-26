@@ -51,3 +51,10 @@ Copy [installpath]\cuda\lib\x64\cudnn.lib to C:\Program Files\NVIDIA GPU Computi
 1. OpenCV FaceRecognizer class (<https://docs.opencv.org/3.4/da/d60/tutorial_face_main.html>)
 2. Scikit-learn SVM classifier (<https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>)
 3. Keras FaceNet Pre-Trained Model (<https://github.com/nyoki-mtl/keras-facenet>)
+
+<br />
+
+#### Face detection and alignment based on:
+1. Dlib face detector (<http://dlib.net/face_detector.py.html>)
+2. Dlib face alignment (<http://dlib.net/face_alignment.py.html>)
+3. Dlib 68 point facial landmark predictor (<http://dlib.net/face_landmark_detection.py.html>)
