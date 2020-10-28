@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 
+# function not used anymore
 def create_label_dictionary(dir_path, dictionary_savepath):
     dict = {}
     dirs = os.listdir(dir_path)
@@ -16,6 +17,7 @@ def create_label_dictionary(dir_path, dictionary_savepath):
         pickle.dump(dict, f, pickle.HIGHEST_PROTOCOL)
 
 
+# function not used anymore
 def load_label_dictionary(dictionary_savepath):
     save_path = os.path.join(dictionary_savepath, 'label_dic.pkl')
     with open(save_path, 'rb') as f:
@@ -74,7 +76,7 @@ def train(faces, labels, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - Fishe
         face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
     face_recognizer.train(faces, np.array(labels))  # cv2 face recognizer expects numpy array
-    create_label_dictionary('./detections', './models')
+    # create_label_dictionary('./detections', './models')
 
     return face_recognizer
 

@@ -30,7 +30,7 @@
                 background_normal:'./Images/light_grey.jpg'
                 background_down: './Images/pressed.jpg'
                 values: root.get_values()
-                on_text: root.on_spinner_select(directory_spinner.text)
+                on_text: root.on_spinner_select(self.text)
                 option_cls: Factory.get("MySpinnerOption")
             Label:
                 size_hint_x: .1

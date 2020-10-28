@@ -18,12 +18,12 @@ class RecognitionScreen(Screen):
     selected_index = 0
     number_correct = 0
     number_incorrect = 0
-    algorithm = 0
+    chosen_model = 'None'
 
     def __init__(self, **kw):
         super().__init__(**kw)
 
-    def detect(self, img_source, model, f_detector, s_predictor, p_model, label_dic):
+    def detect(self, img_source, model, f_detector, s_predictor, model_info, facenet_model):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
         detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name,
                                draw_points=False, face_det=f_detector, shape_pred=s_predictor)
@@ -35,20 +35,19 @@ class RecognitionScreen(Screen):
         # self.ids.face_image.load_image(file_name)
         # detected = face_detect(file_name, self.ids.name_input.text)
 
-        self.ids.face_image.reload()
         print('detected: ', str(detected[1]), 'saved in:', detection_path)
 
         detection_results = []
 
         for filename in os.listdir(detection_path):
             file_path = os.path.join(detection_path, filename)
-            if self.algorithm == 4:
-                # detection_results.append(get_results(file_path, label_dictionary, model))
+            if model_info.algorithm == 4:
                 detection_results.append(
-                    get_prediction(file_path=file_path, required_size=(160, 160), model=model, prediction_model=p_model,
-                                   encoder_path='./models/'))
+                    get_prediction(file_path=file_path, required_size=(160, 160), facenet_model=facenet_model,
+                                   prediction_model=model,
+                                   encoder=model_info.encoder))
             else:
-                detection_results.append(recognize(file_path, model, label_dic))
+                detection_results.append(recognize(file_path, model, model_info.label_dictionary))
         print(detection_results)
 
         if os.path.isfile(detected[0]):
@@ -99,17 +98,17 @@ class RecognitionScreen(Screen):
 
         if len(file_names) > 0:
             prediction_model = None
-            label_dictionary = load_label_dictionary('./models/')
-            if self.algorithm == 4:
-                # model = load_model('./models/dnn_model.h5')
-                model = load_model('./models/facenet_keras.h5', compile=False)
-                prediction_model = pickle.load(open('./models/dnn_modelv2.h5', 'rb'))
-            else:
-                model = load_model_file('./models/cv2_model', algorithm=self.algorithm)
+            facenet_model = None
+
+            model, model_info = self.load_model(self.chosen_model)
+
+            if model_info.algorithm == 4:
+                facenet_model = load_model('./models/facenet_keras.h5', compile=False)
+
             face_detector = load_face_detector()
             shape_predictor = load_shape_predictor()
             for file_name in file_names:
-                self.detect(file_name, model, face_detector, shape_predictor, prediction_model, label_dictionary)
+                self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model)
                 del_all_files(detection_path)  # empty detection directory
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index])  # show first image
 
@@ -143,19 +142,6 @@ class RecognitionScreen(Screen):
                     len(self.recognition_imgs)) + ', Accuracy: ' + str(accuracy)
                 print(str(self.number_correct), 'out of', str(len(self.recognition_imgs)), 'Accuracy:', str(accuracy))
 
-    def on_pre_enter(self, *args):
-        algorithm = load_config()
-        self.algorithm = algorithm
-        self.ids.algorithm_text.text = 'Algorithm: '
-        if algorithm == 1:
-            self.ids.algorithm_text.text += 'LBPH'
-        elif algorithm == 2:
-            self.ids.algorithm_text.text += 'Eigenfaces'
-        elif algorithm == 3:
-            self.ids.algorithm_text.text += 'Fisherfaces'
-        elif algorithm == 4:
-            self.ids.algorithm_text.text += 'DNN'
-
     def use_webcam(self):
         if not self.ids.camera_switch.on:
             self.ids.cam_box.play = True
@@ -164,3 +150,52 @@ class RecognitionScreen(Screen):
         else:
             self.ids.cam_box.play = False
             self.ids.cam_box.opacity = 0
+
+    def load_model(self, model_name):
+        model = None
+        model_path = os.path.join('./models', model_name, 'model')
+        model_info_path = model_path + '.info'
+        model_info = pickle.load(open(model_info_path, "rb"))
+
+        if model_info.algorithm != 4:
+            if os.path.isfile(model_path):
+                model = load_model_file(model_path, model_info.algorithm)
+        else:
+            model = pickle.load(open(model_path, 'rb'))
+        print('Loaded ' + model_info.get_algorithm_name() + ' model.')
+        return model, model_info
+
+    def get_values(self):
+        dir_names = []
+        model_dir = './models'
+        for file_name in os.listdir(model_dir):
+            if os.path.isdir(os.path.join(model_dir, file_name)):
+                dir_names.append(file_name)
+        return dir_names
+
+    def on_spinner_select(self, name):
+        self.chosen_model = name
+        self.update_values()
+        print('chosen', name)
+
+    def update_values(self):
+        values = self.get_values()
+        self.ids.model_spinner.values = values
+
+        if len(values) > 0:
+            if self.chosen_model == 'None':
+                self.ids.model_spinner.text = values[0]
+                self.chosen_model = values[0]
+            else:
+                self.ids.model_spinner.text = self.chosen_model
+
+            model_info_path = os.path.join('./models', self.chosen_model, 'model.info')
+            model_info = pickle.load(open(model_info_path, "rb"))
+            self.ids.created_info.text = '[b]Created:[/b] ' + model_info.creation_date
+            self.ids.algorithm_info.text = '[b]Algorithm:[/b] ' + model_info.get_algorithm_name()
+            self.ids.labels_info.text = '[b]Labels:[/b] ' + model_info.get_labels()
+
+
+    def on_pre_enter(self, *args):
+        self.update_values()
+

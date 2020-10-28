@@ -5,7 +5,7 @@ from functions.configuration import *
 from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 from functions.cnn_face_recognition_v2 import train_model
-
+from classes.model import Model
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
@@ -79,8 +79,8 @@ class TrainingScreen(Screen):
         return names
 
     def get_values(self):
-        dir_name = self.get_dir_names()
-        return dir_name
+        dir_names = self.get_dir_names()
+        return dir_names
 
     def get_file_number(self, dir_name):  # returns number of jpg files in directory
         n = 0
@@ -126,15 +126,19 @@ class TrainingScreen(Screen):
         if algorithm != 0:
             if algorithm == 4:
                 # cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
-                train_model(images_source_path=self.photos_dir,
+                model, encoder = train_model(images_source_path=self.photos_dir,
                             images_destination_path=self.deep_learning_dir,
                             facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
                             model_save_dir=self.model_files_path,
                             valid_percentage=10)
+                dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
+                                  save_dir=self.model_files_path)
+                pickle.dump(model, open(os.path.join(dnn_model.save_path, dnn_model.get_algorithm_name()), 'wb'))
             else:
                 faces, labels = prepare_training_data(self.photos_dir)
                 model = train(faces, labels, algorithm=algorithm)
-                model.write('./models/cv2_model')
+                cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
+                model.write(os.path.join(cv2_model.save_path, 'model'))
             self.ids.result_text.text = 'Done. Model saved.'
             self.ids.result_text.opacity = 1
             save_settings(algorithm)

@@ -12,17 +12,58 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        Label:
-            id: algorithm_text
-            size_hint_y: None
-            height: 20
-            color: normal_text_color
-            text_size: self.size
-            halign: 'center'
-            valign: 'top'
-            text: 'Algorithm: None'
-            bold: True
-            opacity: .5
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .17
+
+            Spinner:
+                id: model_spinner
+                text: root.chosen_model
+                text_size : self.width, None
+                halign:'center'
+                color: normal_text_color
+                background_normal:'./Images/light_grey.jpg'
+                background_down: './Images/pressed.jpg'
+                values: root.get_values()
+                on_text: root.on_spinner_select(self.text)
+                option_cls: Factory.get("MySpinnerOption")
+                size_hint_x: .4
+            Label:
+                size_hint_x:None
+                width: 10
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    id: created_info
+                    color: normal_text_color
+                    text_size: self.size
+                    font_size: 14
+                    halign: 'left'
+                    valign: 'center'
+                    text: ''
+                    opacity: .7
+                    markup: True
+                Label:
+                    id: algorithm_info
+                    color: normal_text_color
+                    text_size: self.size
+                    font_size: 14
+                    halign: 'left'
+                    valign: 'center'
+                    text: ''
+                    opacity: .7
+                    markup: True
+                Label:
+                    id: labels_info
+                    color: normal_text_color
+                    text_size: self.size
+                    font_size: 14
+                    halign: 'left'
+                    valign: 'center'
+                    text: ''
+                    opacity: .7
+                    markup: True
+
         Label:
             size_hint_y: None
             height: 10

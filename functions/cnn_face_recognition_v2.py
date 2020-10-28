@@ -8,7 +8,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
-import pickle
 
 
 # load images and extract faces for all images in a directory
@@ -127,7 +126,6 @@ def train_model(images_source_path, images_destination_path, facenet_model_path,
     # label encode targets
     out_encoder = LabelEncoder()
     out_encoder.fit(trainy)
-    pickle.dump(out_encoder, open(os.path.join(model_save_dir, 'dnn_modelv2_encoder'), 'wb'))
 
     trainy = out_encoder.transform(trainy)
     testy = out_encoder.transform(testy)
@@ -145,11 +143,11 @@ def train_model(images_source_path, images_destination_path, facenet_model_path,
     # summarize
     print('Accuracy: train=%.3f, test=%.3f' % (score_train * 100, score_test * 100))
 
-    # save trained model to file
-    pickle.dump(model, open(os.path.join(model_save_dir, 'dnn_modelv2.h5'), 'wb'))
+    return model, out_encoder
 
 
-def get_prediction(file_path, required_size, model, prediction_model, encoder_path):
+
+def get_prediction(file_path, required_size, facenet_model, prediction_model, encoder):
     face_pixels = cv2.imread(file_path)
     face_pixels = cv2.resize(face_pixels, required_size)
     face_pixels = face_pixels.astype('float32')
@@ -159,7 +157,7 @@ def get_prediction(file_path, required_size, model, prediction_model, encoder_pa
 
     samples = expand_dims(face_pixels, axis=0)
     # Face embeddings collected
-    yhat = model.predict(samples)
+    yhat = facenet_model.predict(samples)
 
     # comparing the embeddings
     yhat_class = prediction_model.predict(yhat)
@@ -168,7 +166,7 @@ def get_prediction(file_path, required_size, model, prediction_model, encoder_pa
     yhat_prob = prediction_model.predict_proba(yhat)
     class_index = yhat_class[0]
     class_probability = yhat_prob[0, class_index] * 100
-    out_encoder = pickle.load(open(os.path.join(encoder_path, 'dnn_modelv2_encoder'), "rb"))
+    out_encoder = encoder
     predict_names = out_encoder.inverse_transform(yhat_class)
     print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
     return predict_names[0], class_probability
