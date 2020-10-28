@@ -53,6 +53,7 @@ class RecognitionScreen(Screen):
         if os.path.isfile(detected[0]):
             cv2_image = cv2.imread(detected[0])
             faces = detected[2]
+
             for i in range(len(faces)):
                 cv2_image = cv2.putText(cv2_image, detection_results[i][0], (faces[i].left(), faces[i].top()),
                                         cv2.FONT_HERSHEY_SIMPLEX, .7, (0, 0, 255), 2)

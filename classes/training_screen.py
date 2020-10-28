@@ -133,7 +133,7 @@ class TrainingScreen(Screen):
                             valid_percentage=10)
                 dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
                                   save_dir=self.model_files_path)
-                pickle.dump(model, open(os.path.join(dnn_model.save_path, dnn_model.get_algorithm_name()), 'wb'))
+                pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
             else:
                 faces, labels = prepare_training_data(self.photos_dir)
                 model = train(faces, labels, algorithm=algorithm)
