@@ -14,7 +14,7 @@ Python libraries:
 ```sh
 PyYaml
 opencv-python
-opencv-contrib-python
+opencv-contrib-python (required for dlib face alignment)
 numpy
 kivy (kivy-sdl2, kivy-glew)
 tensorflow (required by keras)
