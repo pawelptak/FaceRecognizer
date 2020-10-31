@@ -17,6 +17,7 @@ opencv-python
 opencv-contrib-python
 numpy
 kivy (kivy-sdl2, kivy-glew)
+tensorflow (required by keras)
 keras
 scikit-learn
 shutil
@@ -29,7 +30,7 @@ dlib
 Dlib requires:
 ```sh
 Cmake
-MicrosoftVisualStudio with C++ libraries
+Visual Studio Build Tools with C++ libraries
 ```
 \
 for GPU support: 

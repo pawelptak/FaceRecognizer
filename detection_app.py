@@ -52,6 +52,9 @@ if __name__ == '__main__':
     if not os.path.exists('./detections'):
         os.makedirs('./detections')
     del_all_files('./detections')
+
+    if not os.path.exists('./recognitions'):
+        os.makedirs('./recognitions')
     del_all_files('./recognitions')
 
     FaceRecognizer().run()

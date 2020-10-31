@@ -28,7 +28,7 @@ def load_face_detector():
 
 def load_shape_predictor():
     print('Loading shape predictor...')
-    return dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+    return dlib.shape_predictor("./models/shape_predictor_68_face_landmarks.dat")
 
 
 def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min_size: tuple):
