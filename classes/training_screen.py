@@ -4,7 +4,7 @@ from tkinter import filedialog
 from functions.configuration import *
 from functions.cv2_face_recognition import *
 from functions.empty_dir import *
-from functions.cnn_face_recognition_v2 import train_model
+from functions.cnn_face_recognition_v2 import train_model, cnn_cross_validation_train
 from classes.model import Model
 
 class TrainingScreen(Screen):
@@ -124,21 +124,21 @@ class TrainingScreen(Screen):
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             accuracy = None
+            splits = self.ids.cv_checkbox.text
+            cv_result = None
             if algorithm == 4:
-                # cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
-                model, encoder, accuracy = train_model(images_source_path=self.photos_dir,
-                            facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
-                            valid_percentage=10)
-                dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
-                                  save_dir=self.model_files_path)
-                pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
+                if self.ids.cv_checkbox.text:
+                    cv_result = cnn_cross_validation_train(images_source_path=self.photos_dir, facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'), num_splits=int(splits))
+                else:
+                    model, encoder, accuracy = train_model(images_source_path=self.photos_dir,
+                                facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
+                                valid_percentage=10)
+                    dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
+                                      save_dir=self.model_files_path)
+                    pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
             else:
                 if self.ids.cv_checkbox.text:
-                    splits = int(self.ids.cv_checkbox.text)
-                    result = cross_validation_train(images_source_path=self.photos_dir, algorithm=algorithm, num_splits=splits)
-                    str_result = "{0:.0%}".format(result)
-                    self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + str_result
-                    self.ids.result_text.opacity = 1
+                    cv_result = cv2_cross_validation_train(images_source_path=self.photos_dir, algorithm=algorithm, num_splits=int(splits))
                 else:
                     model, accuracy = train(images_source_path=self.photos_dir, algorithm=algorithm)
                     cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
@@ -146,7 +146,10 @@ class TrainingScreen(Screen):
             if accuracy is not None:
                 str_accuracy = "{0:.0%}".format(accuracy)
                 self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
-                self.ids.result_text.opacity = 1
+            else:
+                str_result = "{0:.0%}".format(cv_result)
+                self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + str_result
+            self.ids.result_text.opacity = 1
             save_settings(algorithm)
 
     def on_pre_enter(self, *args):

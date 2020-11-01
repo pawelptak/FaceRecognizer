@@ -8,6 +8,8 @@ from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+
 
 # load images and extract faces for all images in a directory
 def load_faces(directory, required_size=(160, 160)):
@@ -130,20 +132,61 @@ def train_model(images_source_path, facenet_model_path, valid_percentage=10):
     testy = out_encoder.transform(testy)
 
     # fit model
-    model = SVC(kernel='linear', probability=True)
+    prediction_model = SVC(kernel='linear', probability=True)
     print('Training model...')
-    model.fit(trainX, trainy)
+    prediction_model.fit(trainX, trainy)
 
     # predict
-    yhat_train = model.predict(trainX)
-    yhat_test = model.predict(testX)
+    yhat_train = prediction_model.predict(trainX)
+    yhat_test = prediction_model.predict(testX)
     # score
     score_train = accuracy_score(trainy, yhat_train)
     score_test = accuracy_score(testy, yhat_test)
     # summarize
     print('Accuracy: train=%.3f, test=%.3f' % (score_train * 100, score_test * 100))
 
-    return model, out_encoder, score_test
+    return prediction_model, out_encoder, score_test
+
+
+def cnn_cross_validation_train(images_source_path, facenet_model_path, num_splits):
+    X, y = load_dataset(images_source_path)
+
+    accuracy_sum = 0
+
+
+    kf = KFold(n_splits=num_splits)
+    model = load_model(facenet_model_path, compile=False)
+
+    for train_index, test_index in kf.split(X):
+        trainX, testX = X[train_index], X[test_index]
+        trainy, testy = y[train_index], y[test_index]
+        print(testy)
+        print(trainy)
+        trainX = to_embedding(model, trainX)
+        testX = to_embedding(model, testX)
+
+        # normalize input vectors
+        in_encoder = Normalizer(norm='l2')
+        trainX = in_encoder.transform(trainX)
+        testX = in_encoder.transform(testX)
+
+        out_encoder = LabelEncoder()
+        out_encoder.fit(trainy)
+
+        trainy = out_encoder.transform(trainy)
+        testy = out_encoder.transform(testy)
+
+        prediction_model = SVC(kernel='linear', probability=True)
+        prediction_model.fit(trainX, trainy)
+
+        yhat_test = prediction_model.predict(testX)
+
+        score_test = accuracy_score(testy, yhat_test)
+        print('cv accuracy:', score_test)
+        accuracy_sum += score_test
+    mean = float(accuracy_sum/num_splits)
+    print(str(num_splits) + '-fold cross validation accuracy:', str(mean))
+    return mean
 
 
 

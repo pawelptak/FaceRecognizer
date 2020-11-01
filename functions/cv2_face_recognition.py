@@ -86,7 +86,7 @@ def train(images_source_path, algorithm: int, valid_percentage=10):  # 1 - LBPH,
     return face_recognizer, acc
 
 
-def cross_validation_train(images_source_path, algorithm: int, num_splits):
+def cv2_cross_validation_train(images_source_path, algorithm: int, num_splits):
     X, y = prepare_training_data(images_source_path)
 
     accuracy_sum = 0
