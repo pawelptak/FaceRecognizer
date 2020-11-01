@@ -117,12 +117,14 @@ class RecognitionScreen(Screen):
         if self.selected_index < len(self.recognition_imgs) - 1:
             self.selected_index += 1
             self.ids.face_image.source = self.recognition_imgs[self.selected_index]
+            self.ids.face_image.reload()
         print('index:', self.selected_index)
 
     def previous_img(self):
         if self.selected_index > 0:
             self.selected_index -= 1
             self.ids.face_image.source = self.recognition_imgs[self.selected_index]
+            self.ids.face_image.reload()
         print('index:', self.selected_index)
 
     def rate_image(self, correct: bool):

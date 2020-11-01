@@ -49,11 +49,20 @@ def load_dataset(directory):
 
 def split_dataset(dir_path, valid_percentage: int, dest_path):
     dir_name = os.path.basename(dir_path)
+
     if os.path.isdir(dir_path):
+        if not os.path.exists(os.path.join(dest_path, 'test')):
+            os.makedirs(os.path.join(dest_path, 'test'))
+
+        if not os.path.exists(os.path.join(dest_path, 'train')):
+            os.makedirs(os.path.join(dest_path, 'train'))
+
         i = 0
         file_list = os.listdir(dir_path)
         num_files = len(file_list)
         last_test_index = int(valid_percentage * 0.01 * num_files)
+        if last_test_index == 0:
+            print('Error. More training images needed.')
         print('From', num_files, 'in', dir_name, last_test_index, '(' + str(valid_percentage) + '%)', 'for validation')
         for i in range(num_files):
             file_path = os.path.join(dir_path, file_list[i])
@@ -132,6 +141,7 @@ def train_model(images_source_path, images_destination_path, facenet_model_path,
 
     # fit model
     model = SVC(kernel='linear', probability=True)
+    print('Training model...')
     model.fit(trainX, trainy)
 
     # predict
