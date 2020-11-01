@@ -9,7 +9,6 @@ from classes.model import Model
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
-    deep_learning_dir = './deep_learning_datasets/'
     deep_learning_model_path = './models/dnn_model.h5'
     model_files_path = './models/'
     dir_name = 'None'  # chosen directory
@@ -126,20 +125,18 @@ class TrainingScreen(Screen):
         if algorithm != 0:
             if algorithm == 4:
                 # cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
-                model, encoder = train_model(images_source_path=self.photos_dir,
-                            images_destination_path=self.deep_learning_dir,
+                model, encoder, accuracy = train_model(images_source_path=self.photos_dir,
                             facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
-                            model_save_dir=self.model_files_path,
                             valid_percentage=10)
                 dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
                                   save_dir=self.model_files_path)
                 pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
             else:
-                faces, labels = prepare_training_data(self.photos_dir)
-                model = train(faces, labels, algorithm=algorithm)
+                model, accuracy = train(images_source_path=self.photos_dir, algorithm=algorithm)
                 cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
                 model.write(os.path.join(cv2_model.save_path, 'model'))
-            self.ids.result_text.text = 'Done. Model saved.'
+            str_accuracy = "{0:.0%}".format(accuracy)
+            self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
             self.ids.result_text.opacity = 1
             save_settings(algorithm)
 

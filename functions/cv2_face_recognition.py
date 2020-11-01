@@ -2,6 +2,7 @@ import os
 import pickle
 import cv2
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 
 # function not used anymore
@@ -38,7 +39,7 @@ def prepare_training_data(dir_path):
                 faces.append(cv2.imread(os.path.join(path, image), cv2.IMREAD_GRAYSCALE))
                 labels.append(label)
             label += 1
-    return faces, labels
+    return np.asarray(faces), np.asarray(labels)
 
 
 def load_model_file(path, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
@@ -58,9 +59,12 @@ def load_model_file(path, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - Fish
     return model
 
 
-def train(faces, labels, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
-    print("Faces: ", len(faces))
-    print("Labels: ", len(labels))
+def train(images_source_path, algorithm: int, valid_percentage=10):  # 1 - LBPH, 2 - EigenFaces, 3 - FisherFaces
+
+    X, y = prepare_training_data(images_source_path)
+    trainX, testX, trainy, testy = train_test_split(X, y, test_size=float(valid_percentage / 100))
+
+    print(len(trainX), 'images for training.', len(testX), 'images for validation.')
 
     if algorithm == 1:
         # LBPH
@@ -75,10 +79,26 @@ def train(faces, labels, algorithm: int):  # 1 - LBPH, 2 - EigenFaces, 3 - Fishe
         print('Fisherfaces chosen')
         face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
-    face_recognizer.train(faces, np.array(labels))  # cv2 face recognizer expects numpy array
-    # create_label_dictionary('./detections', './models')
+    face_recognizer.train(trainX, trainy)  # cv2 face recognizer expects numpy array
+    acc = calculate_accuracy(testX, testy, face_recognizer)
+    print('Validation accuracy:', acc)
+    return face_recognizer, acc
 
-    return face_recognizer
+
+def calculate_accuracy(testx, testy, model):
+    num_imgs = len(testx)
+    num_correct = 0
+    for img, label in zip(testx, testy):
+        predicted_label, confidence = model.predict(img)
+        #cv2.imshow('',img)
+        #cv2.waitKey(0)
+        #print('Predicted:', predicted_label, 'Real label:', label)
+        if predicted_label == label:
+            num_correct += 1
+    print('Validation: ', num_correct, 'correct out of', num_imgs)
+    return float(num_correct/num_imgs)
+
+
 
 
 def recognize(img, recognizer, label_dictionary):
@@ -92,5 +112,5 @@ def recognize(img, recognizer, label_dictionary):
 if __name__ == '__main__':
     faces, labels = prepare_training_data('../detections')
     dictionary = load_label_dictionary('../models')
-    recognizer = train(faces, labels)
+    #recognizer = train(faces, labels)
     recognize('../Images/add.png', recognizer, dictionary)

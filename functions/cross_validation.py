@@ -14,7 +14,7 @@ class FaceRecognizerModel(BaseEstimator):
         self.model.train(X,y)
 
     def predict(self, T):
-        return [self.model.predict(T[i]) for i in range(0, T.shape[0])]
+        return [self.model.predict(T[i])[0] for i in range(0, T.shape[0])]
 
 
 
@@ -42,5 +42,5 @@ if __name__ == '__main__':
     cv = cval.StratifiedKFold(n_splits=10, shuffle=True)
     estimator = FaceRecognizerModel()
 
-    scores = cval.cross_val_score(estimator, faces, labels, cv=cv,scoring="accuracy")
+    scores = cval.cross_val_score(estimator=estimator, X=faces, y=labels, cv=cv)
 

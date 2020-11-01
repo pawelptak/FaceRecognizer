@@ -3,12 +3,11 @@ import cv2
 from numpy import asarray, expand_dims
 from shutil import copyfile
 from keras.models import load_model
-from functions.empty_dir import del_everything
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
-
+from sklearn.model_selection import train_test_split
 
 # load images and extract faces for all images in a directory
 def load_faces(directory, required_size=(160, 160)):
@@ -47,6 +46,7 @@ def load_dataset(directory):
     return asarray(X), asarray(y)
 
 
+# not used, just for testing
 def split_dataset(dir_path, valid_percentage: int, dest_path):
     dir_name = os.path.basename(dir_path)
 
@@ -102,21 +102,11 @@ def to_embedding(model, dataset):  # convert each face in the dataset to an embe
     return asarray(new_x)
 
 
-def train_model(images_source_path, images_destination_path, facenet_model_path, model_save_dir, valid_percentage=10):
-    del_everything(images_destination_path)
-    for dir_name in os.listdir(images_source_path):
-        dir_path = os.path.join(images_source_path, dir_name)
-        if os.path.isdir(dir_path):
-            split_dataset(dir_path=dir_path, valid_percentage=valid_percentage, dest_path=images_destination_path)
-
-    trainset_path = os.path.join(images_destination_path, 'train')
-    testset_path = os.path.join(images_destination_path, 'test')
-
+def train_model(images_source_path, facenet_model_path, valid_percentage=10):
     # load train dataset
-    trainX, trainy = load_dataset(trainset_path)
+    X, y = load_dataset(images_source_path)
+    trainX, testX, trainy, testy = train_test_split(X, y, test_size=float(valid_percentage/100))
     print(trainX.shape, trainy.shape)
-    # load test dataset
-    testX, testy = load_dataset(testset_path)
     print(testX.shape, testy.shape)
 
     # load the facenet model
@@ -153,7 +143,7 @@ def train_model(images_source_path, images_destination_path, facenet_model_path,
     # summarize
     print('Accuracy: train=%.3f, test=%.3f' % (score_train * 100, score_test * 100))
 
-    return model, out_encoder
+    return model, out_encoder, score_test
 
 
 
