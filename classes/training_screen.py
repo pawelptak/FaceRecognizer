@@ -123,6 +123,7 @@ class TrainingScreen(Screen):
         self.ids.result_text.opacity = 0
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
+            accuracy = None
             if algorithm == 4:
                 # cnn_train(train_path=self.photos_dir, image_size=[200,200], epochs=10, valid_percentage=5, datasets_dir_path=self.deep_learning_dir, model_path=self.deep_learning_model_path)
                 model, encoder, accuracy = train_model(images_source_path=self.photos_dir,
@@ -132,12 +133,20 @@ class TrainingScreen(Screen):
                                   save_dir=self.model_files_path)
                 pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
             else:
-                model, accuracy = train(images_source_path=self.photos_dir, algorithm=algorithm)
-                cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
-                model.write(os.path.join(cv2_model.save_path, 'model'))
-            str_accuracy = "{0:.0%}".format(accuracy)
-            self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
-            self.ids.result_text.opacity = 1
+                if self.ids.cv_checkbox.text:
+                    splits = int(self.ids.cv_checkbox.text)
+                    result = cross_validation_train(images_source_path=self.photos_dir, algorithm=algorithm, num_splits=splits)
+                    str_result = "{0:.0%}".format(result)
+                    self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + str_result
+                    self.ids.result_text.opacity = 1
+                else:
+                    model, accuracy = train(images_source_path=self.photos_dir, algorithm=algorithm)
+                    cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
+                    model.write(os.path.join(cv2_model.save_path, 'model'))
+            if accuracy is not None:
+                str_accuracy = "{0:.0%}".format(accuracy)
+                self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
+                self.ids.result_text.opacity = 1
             save_settings(algorithm)
 
     def on_pre_enter(self, *args):

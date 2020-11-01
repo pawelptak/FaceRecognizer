@@ -111,6 +111,17 @@
             width: 1.001
             ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
 
+<SquareInput@TextInput>:
+    write_tab: False
+    background_normal:'Images/light_grey.jpg'
+    background_disabled_normal:'Images/pressed.jpg'
+    text_size: self.size
+    valign:'bottom'
+
+    canvas.before:
+        Color:
+            rgb: normal_text_color if self.text != '' and self.disabled == False else (.6,.6,.6,1)
+
 
 <MySpinnerOption@SpinnerOption>: #spinner is a drop down list for choosing models
     background_normal:'./Images/pressed.jpg'
