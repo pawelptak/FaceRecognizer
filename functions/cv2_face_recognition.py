@@ -81,6 +81,15 @@ def train(images_source_path, algorithm: int, valid_percentage=10):  # 1 - LBPH,
         face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
     face_recognizer.train(trainX, trainy)  # cv2 face recognizer expects numpy array
+
+    #show average face:
+    mean_face = face_recognizer.getMean()
+    arr = mean_face.reshape(X[0].shape)
+    from matplotlib import pyplot as plt
+    plt.imshow(arr, cmap='gray')
+    plt.show()
+
+
     acc = calculate_accuracy(testX, testy, face_recognizer)
     print('Validation accuracy:', acc)
     return face_recognizer, acc
