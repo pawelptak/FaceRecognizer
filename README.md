@@ -3,7 +3,7 @@ Application features:
 - Creating a training dataset for face recognition systems
 - Training a face recognition model using machine learning
 - 4 face recognition algorithms: LBPH, Eigenfaces, Fisherfaces, Deep Learning
-- Testing created face recognition system
+- Testing created face recognition system manually or using k-fold cross-validation
 
 ## Requirements: 
 ```sh
