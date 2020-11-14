@@ -5,6 +5,10 @@ Application features:
 - 4 face recognition algorithms: LBPH, Eigenfaces, Fisherfaces, Deep Learning
 - Testing created face recognition system manually or using k-fold cross-validation
 
+<img src="https://user-images.githubusercontent.com/52631916/99145937-8e929e00-2673-11eb-8dc7-6f0564aa3116.jpg" width="500">
+<img src="https://user-images.githubusercontent.com/52631916/99145993-1678a800-2674-11eb-966f-a3843ffcaf0c.jpg" width="500">
+<img src="https://user-images.githubusercontent.com/52631916/99145976-ea5d2700-2673-11eb-8eb3-664576ae381e.jpg" width="500">
+
 ## Requirements: 
 ```sh
 Python 3.7
