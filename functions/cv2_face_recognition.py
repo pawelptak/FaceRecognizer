@@ -152,7 +152,21 @@ def recognize(img, recognizer, label_dictionary):
 
 
 if __name__ == '__main__':
-    faces, labels = prepare_training_data('../detections')
-    dictionary = load_label_dictionary('../models')
+    import cv2
+    import numpy as np
+    from matplotlib import pyplot as plt
+
+    img = cv2.imread('../Images/pawel_19102020_135138.jpg', 0)
+    sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=5)
+    sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
+
+    plt.subplot(2, 2, 3), plt.imshow(sobelx, cmap='gray')
+    plt.title('Sobel X'), plt.xticks([]), plt.yticks([])
+    plt.subplot(2, 2, 4), plt.imshow(sobely, cmap='gray')
+    plt.title('Sobel Y'), plt.xticks([]), plt.yticks([])
+    plt.show()
+    #faces, labels = prepare_training_data('../detections')
+    #dictionary = load_label_dictionary('../models')
     #recognizer = train(faces, labels)
-    recognize('../Images/add.png', recognizer, dictionary)
+    #recognize('../Images/add.png', recognizer, dictionary)
+
