@@ -23,10 +23,10 @@ class RecognitionScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
 
-    def detect(self, img_source, model, f_detector, s_predictor, model_info, facenet_model):
+    def detect(self, img_source, model, f_detector, s_predictor, model_info, facenet_model, num):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
         detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name,
-                               draw_points=False, face_det=f_detector, shape_pred=s_predictor)
+                               draw_points=False, face_det=f_detector, shape_pred=s_predictor, num=num)
         # if self.ids.cam_box.play:
         #   print('camera enabled')
         #  file_name = './detections/selfie.png'
@@ -108,8 +108,10 @@ class RecognitionScreen(Screen):
 
             face_detector = load_face_detector()
             shape_predictor = load_shape_predictor()
+            num = -1
             for file_name in file_names:
-                self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model)
+                num += 1
+                self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model, num)
                 del_all_files(detection_path)  # empty detection directory
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index])  # show first image
 

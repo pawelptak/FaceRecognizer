@@ -58,7 +58,7 @@ def face_detect_haar(img_path: str, scale_factor: float, min_neighbors: int, min
         print('Image load error or no faces detected')
 
 
-def align_face(img, d, save_path, name, shape_predictor):
+def align_face(img, d, save_path, name, shape_predictor, num):
     # img = cv2.imread(img_path)
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     shape_predictor = shape_predictor
@@ -72,7 +72,7 @@ def align_face(img, d, save_path, name, shape_predictor):
     save_path = os.path.join(save_path, name)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    file_name = name + '_' + dt_string + '_' + str(d.left()) + '.jpg'
+    file_name = name + '_' + dt_string + '_' + str(num) + '.jpg'
     save_path = os.path.join(save_path, file_name)
 
     cv2.imwrite(save_path, face_chip)  # saving detected faces as images
@@ -88,7 +88,7 @@ def draw_landmarks(img, landmarks):
 
 # hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
 def face_detect(image_path, save_path, face_name, draw_points: bool, face_det,
-                shape_pred):
+                shape_pred, num):
     img_name = os.path.basename(image_path)
 
     # HAAR detection
@@ -111,7 +111,7 @@ def face_detect(image_path, save_path, face_name, draw_points: bool, face_det,
 
         for f in detection:
             print('face', f)
-            landmarks.append(align_face(cv2_image, f, save_path, face_name, shape_pred))
+            landmarks.append(align_face(cv2_image, f, save_path, face_name, shape_pred, num))
 
         if draw_points:
             for i in landmarks:
