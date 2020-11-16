@@ -112,11 +112,12 @@ def cv2_cross_validation_train(images_source_path, algorithm: int, num_splits):
         print('Fisherfaces chosen')
         face_recognizer = cv2.face.FisherFaceRecognizer_create(num_components=0)
 
-    kf = KFold(n_splits=num_splits)
+    kf = KFold(n_splits=num_splits, shuffle=True)
 
     for train_index, test_index in kf.split(X):
         trainX, testX = X[train_index], X[test_index]
         trainy, testy = y[train_index], y[test_index]
+
         face_recognizer.train(np.asarray(trainX), np.asarray(trainy))
 
         acc = calculate_accuracy(testX, testy, face_recognizer)
@@ -134,7 +135,7 @@ def calculate_accuracy(testx, testy, model):
         predicted_label, confidence = model.predict(img)
         #cv2.imshow('',img)
         #cv2.waitKey(0)
-        print('Predicted:', predicted_label, 'Real label:', label)
+        print('Predicted:', predicted_label, 'Actual label:', label)
         if predicted_label == label:
             num_correct += 1
     print('Validation: ', num_correct, 'correct out of', num_imgs)

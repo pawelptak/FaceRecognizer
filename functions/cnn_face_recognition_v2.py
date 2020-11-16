@@ -154,7 +154,7 @@ def cnn_cross_validation_train(images_source_path, facenet_model_path, num_split
     accuracy_sum = 0
 
 
-    kf = KFold(n_splits=num_splits)
+    kf = KFold(n_splits=num_splits, shuffle=True)
     model = load_model(facenet_model_path, compile=False)
 
     for train_index, test_index in kf.split(X):
@@ -211,13 +211,13 @@ def get_prediction(file_path, required_size, facenet_model, prediction_model, en
     class_probability = yhat_prob[0, class_index] * 100
     out_encoder = encoder
     predict_names = out_encoder.inverse_transform(yhat_class)
-    threshold = 99.00
-    if class_probability < threshold:
-        print('Predicted: %s (%.3f)' % ('unknown', class_probability))
-        return 'unknown', class_probability
-    else:
-        print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
-        return predict_names[0], class_probability
+    #threshold = 99.99
+    #if class_probability < threshold:
+    #    print('Predicted: %s (%.3f)' % ('unknown', class_probability))
+    #    return 'unknown', class_probability
+    #else:
+    #    print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
+    return predict_names[0], class_probability
 
 # train_model(images_source_path='../detections/',
 #            images_destination_path='../deep_learning_datasets',
