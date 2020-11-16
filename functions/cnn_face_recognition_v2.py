@@ -160,8 +160,7 @@ def cnn_cross_validation_train(images_source_path, facenet_model_path, num_split
     for train_index, test_index in kf.split(X):
         trainX, testX = X[train_index], X[test_index]
         trainy, testy = y[train_index], y[test_index]
-        print(testy)
-        print(trainy)
+
         trainX = to_embedding(model, trainX)
         testX = to_embedding(model, testX)
 
