@@ -122,7 +122,7 @@ def cv2_cross_validation_train(images_source_path, algorithm: int, num_splits):
 
         acc = calculate_accuracy(testX, testy, face_recognizer)
         accuracy_sum += acc
-    mean = float(accuracy_sum/num_splits)
+    mean = "{0:.2%}".format(accuracy_sum/num_splits)
     print(str(num_splits) + '-fold cross validation accuracy:', str(mean))
     return mean
 

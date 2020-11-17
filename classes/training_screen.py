@@ -147,8 +147,7 @@ class TrainingScreen(Screen):
                 str_accuracy = "{0:.0%}".format(accuracy)
                 self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
             else:
-                str_result = "{0:.0%}".format(cv_result)
-                self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + str_result
+                self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + cv_result
             self.ids.result_text.opacity = 1
             save_settings(algorithm)
 

@@ -28,6 +28,7 @@ def resize_images(dir_path, x, y):  # resizes all images in given directory to g
 
 
 if __name__ == '__main__':
-    resize_images('../detections/pawel', 224, 224)
-    resize_images('../detections/dorota', 224, 224)
-    resize_images('../detections/justyna', 224, 244)
+    for dir_name in os.listdir('../detections/'):
+        dir_path = os.path.join('../detections/', dir_name)
+        resize_images(dir_path, 200,200)
+    #resize_images('../detections/pawel', 224, 224)

@@ -184,7 +184,8 @@ def cnn_cross_validation_train(images_source_path, facenet_model_path, num_split
         print('cv accuracy:', score_test)
         accuracy_sum += score_test
     mean = float(accuracy_sum/num_splits)
-    print(str(num_splits) + '-fold cross validation accuracy:', str(mean))
+    mean = "{0:.2%}".format(mean)
+    print(str(num_splits) + '-fold cross validation accuracy:', mean)
     return mean
 
 
