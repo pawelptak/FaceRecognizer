@@ -1,3 +1,4 @@
+from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 from functions.configuration import *
 import tkinter as tk
@@ -7,7 +8,7 @@ from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 from keras.models import load_model
 from functions.cnn_face_recognition_v2 import get_prediction
-
+from concurrent.futures import ThreadPoolExecutor
 
 class RecognitionScreen(Screen):
     image_source = ''
@@ -102,19 +103,28 @@ class RecognitionScreen(Screen):
             self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            facenet_model = None
+            self.ids.face_image.source = './Images/loading.gif'
+            self.ids.rec_image_button.disabled = True
+            executor = ThreadPoolExecutor(max_workers=1)
+            executor.submit(self.recognize_faces, file_names)
 
-            model, model_info = self.load_model(self.chosen_model)
 
-            if model_info.algorithm == 4:
-                facenet_model = load_model('./models/facenet_keras.h5', compile=False)
+    def recognize_faces(self, file_list):
+        facenet_model = None
+        model, model_info = self.load_model(self.chosen_model)
+        if model_info.algorithm == 4:
+            facenet_model = load_model('./models/facenet_keras.h5', compile=False)
+        face_detector = load_face_detector()
+        shape_predictor = load_shape_predictor()
+        num = -1
+        for file_name in file_list:
+            num += 1
+            self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model, num)
+        self.ids.rec_image_button.disabled = False
+        self.show_results()
 
-            face_detector = load_face_detector()
-            shape_predictor = load_shape_predictor()
-            num = -1
-            for file_name in file_names:
-                num += 1
-                self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model, num)
+    @mainthread
+    def show_results(self):
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index])  # show first image
 
     def next_img(self):
