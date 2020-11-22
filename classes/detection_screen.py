@@ -1,10 +1,11 @@
+from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 from functions.configuration import *
 import tkinter as tk
 from tkinter import filedialog
 from functions.face_detection import *
 from functions.empty_dir import *
-
+from concurrent.futures import ThreadPoolExecutor
 
 class DetectionScreen(Screen):
     image_source = ''
@@ -18,31 +19,44 @@ class DetectionScreen(Screen):
 
     def detect(self):
         del_all_files(self.detections_path)
-        if self.ids.name_input.text != '':
-            self.number_detected = 0
-            detected = 'Nothing'
-            if len(self.file_names) > 0:
-                face_detector = load_face_detector()
-                shape_predictor = load_shape_predictor()
-                for index, file_name in enumerate(self.file_names):
-                    detected = face_detect(image_path=file_name, save_path=self.detections_path,
-                                           face_name=self.ids.name_input.text, draw_points=True, face_det=face_detector,
-                                           shape_pred=shape_predictor, file_number=index)
-                    self.file_names[index] = detected[0]
-                    self.number_detected += detected[1]
-            # elif self.ids.cam_box.play:
-            #    print('camera enabled')
-            #    file_name = './detections/selfie.png'
-            #    self.ids.cam_box.export_to_png(file_name)
-            #    self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
-            #    self.ids.face_image.load_image(file_name)
-            #    detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
 
-            if os.path.isfile(self.file_names[self.selected_index]):
-                self.ids.face_image.source = self.file_names[self.selected_index]
-                self.ids.face_image.reload()
-            self.ids.result.text = 'Faces detected: ' + str(self.number_detected)
-            self.ids.result.opacity = 1
+        self.number_detected = 0
+        detected = 'Nothing'
+        face_detector = load_face_detector()
+        shape_predictor = load_shape_predictor()
+        for index, file_name in enumerate(self.file_names):
+            detected = face_detect(image_path=file_name, save_path=self.detections_path,
+                                   face_name=self.ids.name_input.text, draw_points=True, face_det=face_detector,
+                                   shape_pred=shape_predictor, file_number=index)
+            self.file_names[index] = detected[0]
+            self.number_detected += detected[1]
+        # elif self.ids.cam_box.play:
+        #    print('camera enabled')
+        #    file_name = './detections/selfie.png'
+        #    self.ids.cam_box.export_to_png(file_name)
+        #    self.ids.camera_switch.trigger_action(duration=0.1)  # press button to turn off the camera
+        #    self.ids.face_image.load_image(file_name)
+        #    detected = face_detect(image_path=file_name, save_path=self.detections_path, face_name=self.ids.name_input.text, draw_points=True)
+
+        self.show_results()
+
+    @mainthread
+    def show_results(self):
+        if os.path.isfile(self.file_names[self.selected_index]):
+            self.ids.face_image.source = self.file_names[self.selected_index]
+            self.ids.face_image.reload()
+        self.ids.result.text = 'Faces detected: ' + str(self.number_detected)
+        self.ids.result.opacity = 1
+        self.ids.detect_button.text = 'Detect'
+        self.ids.detect_button.disabled = False
+
+    def start_detection(self):
+        if self.ids.name_input.text != '' and len(self.file_names) > 0:
+            self.ids.result.opacity = 0
+            self.ids.detect_button.text = 'Detecting'
+            self.ids.detect_button.disabled = True
+            executor = ThreadPoolExecutor(max_workers=1)
+            executor.submit(self.detect)
 
     def open_file_dialog(self):
         self.selected_index = 0
