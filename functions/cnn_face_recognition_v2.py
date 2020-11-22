@@ -211,13 +211,12 @@ def get_prediction(file_path, required_size, facenet_model, prediction_model, en
     class_probability = yhat_prob[0, class_index] * 100
     out_encoder = encoder
     predict_names = out_encoder.inverse_transform(yhat_class)
-    #threshold = 99.99
-    #if class_probability < threshold:
-    #    print('Predicted: %s (%.3f)' % ('unknown', class_probability))
-    #    return 'unknown', class_probability
-    #else:
-    #    print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
-    return predict_names[0], class_probability
+    threshold = 99.99
+    predicted_person = 'unknown'
+    if class_probability >= threshold:
+        predicted_person = predict_names[0]
+    print('Predicted: %s (%.3f)' % (predicted_person, class_probability))
+    return predicted_person, class_probability
 
 # train_model(images_source_path='../detections/',
 #            images_destination_path='../deep_learning_datasets',
