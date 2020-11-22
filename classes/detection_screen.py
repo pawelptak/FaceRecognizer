@@ -27,7 +27,7 @@ class DetectionScreen(Screen):
                 for index, file_name in enumerate(self.file_names):
                     detected = face_detect(image_path=file_name, save_path=self.detections_path,
                                            face_name=self.ids.name_input.text, draw_points=True, face_det=face_detector,
-                                           shape_pred=shape_predictor, num=index)
+                                           shape_pred=shape_predictor, file_number=index)
                     self.file_names[index] = detected[0]
                     self.number_detected += detected[1]
             # elif self.ids.cam_box.play:

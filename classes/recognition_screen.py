@@ -26,7 +26,7 @@ class RecognitionScreen(Screen):
     def detect(self, img_source, model, f_detector, s_predictor, model_info, facenet_model, num):
         detection_path = os.path.join(self.recognitions_path, self.face_name)
         detected = face_detect(image_path=img_source, save_path=self.recognitions_path, face_name=self.face_name,
-                               draw_points=False, face_det=f_detector, shape_pred=s_predictor, num=num)
+                               draw_points=False, face_det=f_detector, shape_pred=s_predictor, file_number=num)
         # if self.ids.cam_box.play:
         #   print('camera enabled')
         #  file_name = './detections/selfie.png'
@@ -37,29 +37,32 @@ class RecognitionScreen(Screen):
 
         print('detected: ', str(detected[1]), 'saved in:', detection_path)
 
-        detection_results = []
+        recognition_results = []
+
+        faces = detected[2]
 
         for filename in os.listdir(detection_path):
             file_path = os.path.join(detection_path, filename)
+
             if model_info.algorithm == 4:
-                detection_results.append(
+                recognition_results.append(
                     get_prediction(file_path=file_path, required_size=(160, 160), facenet_model=facenet_model,
                                    prediction_model=model,
                                    encoder=model_info.encoder))
             else:
-                detection_results.append(recognize(file_path, model, model_info.label_dictionary))
-        print(detection_results)
+                recognition_results.append(recognize(file_path, model, model_info.label_dictionary))
+        print(recognition_results)
 
         if os.path.isfile(detected[0]):
             cv2_image = cv2.imread(detected[0])
             height, width, channels = cv2_image.shape
-            faces = detected[2]
 
             for i in range(len(faces)):
-                cv2_image = cv2.putText(cv2_image, detection_results[i][0], (faces[i].left(), faces[i].top()),
+                cv2_image = cv2.putText(cv2_image, recognition_results[i][0], (faces[i].left(), faces[i].top()),
                                         cv2.FONT_HERSHEY_SIMPLEX, min(width,height)*.002, (0, 255, 0), int(min(width,height)*.008))
             cv2.imwrite(detected[0], cv2_image)
             self.recognition_imgs = self.get_recognition_images(self.recognitions_path)
+            del_all_files(detection_path)  # empty detection directory
 
     def get_recognition_images(self,
                                dir_path):  # returns list of images in given directory with a name starting with 'det'
@@ -112,7 +115,6 @@ class RecognitionScreen(Screen):
             for file_name in file_names:
                 num += 1
                 self.detect(file_name, model, face_detector, shape_predictor, model_info, facenet_model, num)
-                del_all_files(detection_path)  # empty detection directory
             self.ids.face_image.load_image(self.recognition_imgs[self.selected_index])  # show first image
 
     def next_img(self):
