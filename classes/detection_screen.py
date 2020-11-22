@@ -52,6 +52,7 @@ class DetectionScreen(Screen):
 
     def start_detection_thread(self):
         if self.ids.name_input.text != '' and len(self.file_names) > 0:
+            self.ids.face_image.source = './Images/loading.gif'
             self.ids.result.opacity = 0
             self.ids.detect_button.text = 'Detecting'
             self.ids.detect_button.disabled = True
