@@ -17,22 +17,13 @@ class TrainingScreen(Screen):
 
     def __init__(self, **kw):
         super().__init__(**kw)
-        directories = self.get_values()
-        if directories:
-            first_dir = directories[0]
-            if first_dir is not None:
-                self.dir_name = first_dir  # show first directory on the spinner
-            else:
-                self.dir_name = 'None'
-        self.num_files = self.get_file_number(self.dir_name)
-        img_source = self.get_img_preview()
-        self.img_preview = img_source
 
     def get_img_preview(self):
         name = self.dir_name
-        if name != 'None':
-            path = os.path.join(self.photos_dir, name)
-            return os.path.join(path, os.listdir(path)[0])
+        path = os.path.join(self.photos_dir, name)
+        first_img_path = os.path.join(path, os.listdir(path)[0])
+        if os.path.isfile(first_img_path):
+            return first_img_path
         else:
             return './Images/icon.png'
 
@@ -58,13 +49,18 @@ class TrainingScreen(Screen):
                 return dir
 
     def update_values(self):  # update displayed values
+        self.img_preview = self.get_img_preview()
+        self.num_files = self.get_file_number(self.dir_name)
+        self.ids.preview.source = self.img_preview
+        self.ids.preview.reload()
+
         self.ids.current_dir_text.text = self.photos_dir
         values = self.get_values()
         self.ids.directory_spinner.values = values
         self.ids.directory_spinner.text = self.dir_name
         self.ids.num_files.text = str(self.num_files) + ' files'
-        self.ids.preview.source = self.get_img_preview()
-        self.ids.preview.reload()
+
+
 
     def get_dir_names(self):
         names = []
@@ -74,7 +70,6 @@ class TrainingScreen(Screen):
             if os.path.isdir(dir_name):
                 if self.get_file_number(name) > 0:
                     names.append(name)
-        print(names)
         return names
 
     def get_values(self):
@@ -154,4 +149,9 @@ class TrainingScreen(Screen):
     def on_pre_enter(self, *args):
         self.load_checkbox_value()
         del_all_files('./detections')
+        directories = self.get_values()
+        if directories:
+            first_dir = directories[0]
+            if first_dir is not None:
+                self.dir_name = first_dir  # show first directory on the spinner
         self.update_values()
