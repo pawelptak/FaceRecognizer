@@ -5,13 +5,16 @@ import pickle
 
 class Model:
 
-    def __init__(self, algorithm, encoder, train_set_dir, save_dir):
+    def __init__(self, name, algorithm, encoder, train_set_dir, save_dir):
         self.algorithm = algorithm
         self.encoder = encoder
         now = datetime.now()
         self.creation_date = now.strftime("%d.%m.%Y, %H:%M:%S")
         self.label_dictionary = self.create_label_dictionary(train_set_dir)
-        self.name = self.get_algorithm_name() + '_' + now.strftime("%d%m%Y_%H%M%S")
+        if name:
+            self.name = name
+        else:
+            self.name = self.get_algorithm_name() + '_' + now.strftime("%d%m%Y_%H%M%S")
         self.save_path = os.path.join(save_dir, self.name)
         self.save_to_file('model.info')
 
@@ -55,6 +58,11 @@ class Model:
         self.encoder = new_encoder
         self.save_to_file('model.info')
         print('Encoder updated.')
+
+    def change_name(self, new_name):
+        self.save_path = self.save_path.replace(os.path.basename(self.save_path), new_name)
+        self.save_to_file('model.info')
+        print('Name updated.', self.save_path)
 
     def get_labels(self):
         labels = ""

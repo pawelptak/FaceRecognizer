@@ -6,6 +6,7 @@ from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 from functions.cnn_face_recognition_v2 import train_model, cnn_cross_validation_train
 from classes.model import Model
+from concurrent.futures import ThreadPoolExecutor
 
 class TrainingScreen(Screen):
     photos_dir = './detections/'
@@ -115,12 +116,12 @@ class TrainingScreen(Screen):
             self.ids.cnn_checkbox.active = True
 
     def begin_training(self):
-        self.ids.result_text.opacity = 0
         algorithm = self.get_checkbox_value()
         if algorithm != 0:
             accuracy = None
             splits = self.ids.cv_checkbox.text
             cv_result = None
+            saved_model_name = ''
             if algorithm == 4:
                 if self.ids.cv_checkbox.text:
                     cv_result = cnn_cross_validation_train(images_source_path=self.photos_dir, facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'), num_splits=int(splits))
@@ -128,23 +129,34 @@ class TrainingScreen(Screen):
                     model, encoder, accuracy = train_model(images_source_path=self.photos_dir,
                                 facenet_model_path=os.path.join(self.model_files_path, 'facenet_keras.h5'),
                                 valid_percentage=10)
-                    dnn_model = Model(algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
+                    dnn_model = Model(name=self.ids.name_input.text, algorithm=algorithm, encoder=encoder, train_set_dir=self.photos_dir,
                                       save_dir=self.model_files_path)
                     pickle.dump(model, open(os.path.join(dnn_model.save_path, 'model'), 'wb'))
+                    saved_model_name = dnn_model.name
             else:
                 if self.ids.cv_checkbox.text:
                     cv_result = cv2_cross_validation_train(images_source_path=self.photos_dir, algorithm=algorithm, num_splits=int(splits))
                 else:
                     model, accuracy = train(images_source_path=self.photos_dir, algorithm=algorithm)
-                    cv2_model = Model(algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
+                    cv2_model = Model(name=self.ids.name_input.text, algorithm=algorithm, encoder=None, train_set_dir=self.photos_dir, save_dir=self.model_files_path)
                     model.write(os.path.join(cv2_model.save_path, 'model'))
+                    saved_model_name = cv2_model.name
             if accuracy is not None:
                 str_accuracy = "{0:.0%}".format(accuracy)
-                self.ids.result_text.text = 'Model saved. Validation accuracy: ' + str_accuracy
+                self.ids.result_text.text = 'Saved as: ' + saved_model_name + '. Validation accuracy: ' + str_accuracy
             else:
                 self.ids.result_text.text = str(splits) + '-fold cross validation accuracy: ' + cv_result
             self.ids.result_text.opacity = 1
+            self.ids.train_button.text = 'Begin training'
+            self.ids.train_button.disabled = False
             save_settings(algorithm)
+
+    def start_training_thread(self):
+        self.ids.result_text.opacity = 0
+        self.ids.train_button.text = 'Training'
+        self.ids.train_button.disabled = True
+        executor = ThreadPoolExecutor(max_workers=1)
+        executor.submit(self.begin_training)
 
     def on_pre_enter(self, *args):
         self.load_checkbox_value()

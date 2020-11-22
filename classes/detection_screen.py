@@ -50,7 +50,7 @@ class DetectionScreen(Screen):
         self.ids.detect_button.text = 'Detect'
         self.ids.detect_button.disabled = False
 
-    def start_detection(self):
+    def start_detection_thread(self):
         if self.ids.name_input.text != '' and len(self.file_names) > 0:
             self.ids.result.opacity = 0
             self.ids.detect_button.text = 'Detecting'
