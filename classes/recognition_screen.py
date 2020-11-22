@@ -52,11 +52,12 @@ class RecognitionScreen(Screen):
 
         if os.path.isfile(detected[0]):
             cv2_image = cv2.imread(detected[0])
+            height, width, channels = cv2_image.shape
             faces = detected[2]
 
             for i in range(len(faces)):
                 cv2_image = cv2.putText(cv2_image, detection_results[i][0], (faces[i].left(), faces[i].top()),
-                                        cv2.FONT_HERSHEY_SIMPLEX, .7, (0, 0, 255), 2)
+                                        cv2.FONT_HERSHEY_SIMPLEX, min(width,height)*.002, (0, 255, 0), int(min(width,height)*.008))
             cv2.imwrite(detected[0], cv2_image)
             self.recognition_imgs = self.get_recognition_images(self.recognitions_path)
 
@@ -98,7 +99,6 @@ class RecognitionScreen(Screen):
             self.get_root_window().raise_window()  # set focus on window
 
         if len(file_names) > 0:
-            prediction_model = None
             facenet_model = None
 
             model, model_info = self.load_model(self.chosen_model)

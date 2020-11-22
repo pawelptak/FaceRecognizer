@@ -80,10 +80,11 @@ def align_face(img, d, save_path, name, shape_predictor, num):
 
 
 def draw_landmarks(img, landmarks):
+    height, width, channels = img.shape
     for i in range(0, 68):
         x = landmarks.part(i).x
         y = landmarks.part(i).y
-        cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
+        cv2.circle(img, (x, y), int(min(width, height) * .01), (0, 0, 255), -1)
 
 
 # hog or haar face detection with alignment, returns path to image with detections, number of detetions, and detection coordinates
@@ -118,7 +119,8 @@ def face_detect(image_path, save_path, face_name, draw_points: bool, face_det,
                 draw_landmarks(cv2_image, i)
 
         for f in detection:
-            cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), 2)
+            height, width, channels = cv2_image.shape
+            cv2_image = cv2.rectangle(cv2_image, (f.left(), f.top()), (f.right(), f.bottom()), (255, 0, 0), int(min(width, height) * .01))
 
         detected_filename = 'det_' + img_name
         save_path = os.path.join(save_path, detected_filename)
