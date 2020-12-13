@@ -126,7 +126,7 @@ def train_model(images_source_path, facenet_model_path, valid_percentage=10):
 
     # label encode targets
     out_encoder = LabelEncoder()
-    out_encoder.fit(trainy)
+    out_encoder.fit(trainy) #labels into integers
 
     trainy = out_encoder.transform(trainy)
     testy = out_encoder.transform(testy)
