@@ -4,7 +4,7 @@ from tkinter import filedialog
 from functions.configuration import *
 from functions.cv2_face_recognition import *
 from functions.empty_dir import *
-from functions.cnn_face_recognition_v2 import train_model, cnn_cross_validation_train
+from functions.cnn_face_recognition import train_model, cnn_cross_validation_train
 from classes.model import Model
 from concurrent.futures import ThreadPoolExecutor
 

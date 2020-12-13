@@ -7,7 +7,7 @@ from functions.face_detection import *
 from functions.cv2_face_recognition import *
 from functions.empty_dir import *
 from keras.models import load_model
-from functions.cnn_face_recognition_v2 import get_prediction
+from functions.cnn_face_recognition import get_prediction
 from concurrent.futures import ThreadPoolExecutor
 
 class RecognitionScreen(Screen):
