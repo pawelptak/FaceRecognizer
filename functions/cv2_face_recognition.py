@@ -70,7 +70,7 @@ def train(images_source_path, algorithm: int, valid_percentage=10):  # 1 - LBPH,
     if algorithm == 1:
         # LBPH
         print('LBPH chosen')
-        face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=30, neighbors=8, grid_x=8, grid_y=8, threshold=5000)
+        face_recognizer = cv2.face.LBPHFaceRecognizer_create(radius=30, neighbors=8, grid_x=8, grid_y=8)
     elif algorithm == 2:
         # EigenFaces
         print('Eigenfaces chosen')
