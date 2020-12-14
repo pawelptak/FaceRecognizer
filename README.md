@@ -12,6 +12,7 @@ Application features:
 ## Requirements: 
 ```sh
 Python 3.7
+PyCharm IDE
 ```
 \
 Python libraries:
