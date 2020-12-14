@@ -12,7 +12,7 @@ Application features:
 ## Requirements: 
 ```sh
 Python 3.7
-PyCharm IDE
+PyCharm IDE (run the program via detection_app.py file)
 ```
 \
 Python libraries:
