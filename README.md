@@ -31,7 +31,7 @@ sklearn
 pickle
 dlib
 ```
-*PyCharm IDE should download all needed libraries using the requirements.txt file.*
+*PyCharm IDE should download all needed Python libraries using the requirements.txt file.*
 
 \
 Dlib requires:
