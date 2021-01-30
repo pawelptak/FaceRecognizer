@@ -1,0 +1,14 @@
+dlib==19.21.0
+Keras==2.4.3
+Keras-Preprocessing==1.1.2
+Kivy==1.11.1
+kivy-deps.glew==0.2.0
+kivy-deps.sdl2==0.2.0
+Kivy-Garden==0.1.4
+numpy==1.18.5
+opencv-python==4.4.0.42
+opencv-contrib-python==4.4.0.44
+PyYAML==5.3.1
+scikit-learn==0.23.2
+tensorflow==2.3.1
+tensorflow-estimator==2.3.0
