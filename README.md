@@ -15,7 +15,7 @@ Python 3.7
 PyCharm IDE (run the program via detection_app.py file)
 ```
 \
-Python libraries:
+Python libraries used:
 ```sh
 PyYaml
 opencv-python
@@ -31,6 +31,8 @@ sklearn
 pickle
 dlib
 ```
+*PyCharm IDE should download all needed libraries using the requirements.txt file.*
+
 \
 Dlib requires:
 ```sh

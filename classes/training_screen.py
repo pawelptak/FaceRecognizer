@@ -22,7 +22,13 @@ class TrainingScreen(Screen):
     def get_img_preview(self):
         name = self.dir_name
         path = os.path.join(self.photos_dir, name)
-        first_img_path = os.path.join(path, os.listdir(path)[0])
+        first_img_path = ''
+
+        try:
+            first_img_path = os.path.join(path, os.listdir(path)[0])
+        except:
+            print('Preview image unavailable')
+
         if os.path.isfile(first_img_path):
             return first_img_path
         else:
